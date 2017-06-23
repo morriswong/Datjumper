@@ -1,7 +1,7 @@
-What everyone is working on:
-* -Morris:
-* -Perry:
-* -Miguel: 
+What everyone is working on:  
+Morris:  
+Perry:  
+Miguel:   
 *    -Randomizer for the platforms (Basic version)
 *    -Adjustments to controlers to improve player feeling.
 

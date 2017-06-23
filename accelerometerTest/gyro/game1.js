@@ -4,7 +4,7 @@ Jumper.Play = function() {};
 Jumper.Play.prototype = {
 
   preload: function() {
-    this.load.image( 'hero', 'basketball.png' );
+    this.load.image( 'hero', 'frame_right.png' );
     this.load.image( 'pixel', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/836/pixel_1.png' );
   },
 
@@ -36,14 +36,32 @@ Jumper.Play.prototype = {
     // cursor controls
     this.cursor = this.input.keyboard.createCursorKeys();
 
-    gyro.frequency = 10;
-    var self = this;
-    // start gyroscope detection/
-    gyro.startTracking(function(o) {
-      // updating player velocity
-         self.hero.body.velocity.x += o.gamma/15;
-        //  self.hero.body.velocity.y += o.beta/8;
-    });
+    if (window.DeviceOrientationEvent) {//
+        window.addEventListener("deviceorientation", function () {//gyro
+            processGyro(event.beta, event.gamma, event.alpha);
+        }, true);
+    }
+
+    var velocity = this.hero.body.velocity;
+    var self = this
+
+    function processGyro(alpha,beta,gamma){
+        if (beta > 0){
+            if (velocity.x >= 500){
+                velocity.x = velocity.x
+            } else {
+                velocity.x += (beta);
+            }
+            self.hero.scale.setTo(0.2, -0.2);
+        }else if (beta < 0) {
+            if (velocity.x <= -500){
+                velocity.x = velocity.x
+            } else {
+                velocity.x += (beta);
+            }
+            self.hero.scale.setTo(-0.2, -0.2);
+        }
+    }
   },
 
   update: function() {
@@ -54,23 +72,23 @@ Jumper.Play.prototype = {
 
     // the built in camera follow methods won't work for our needs
     // this is a custom follow style that will not ever move down, it only moves up
-    this.cameraYMin = Math.min( this.cameraYMin, this.hero.y - this.game.height + 130 );
+    this.cameraYMin = Math.min( this.cameraYMin, this.hero.y - this.game.height + 400 );
     this.camera.y = this.cameraYMin;
 
-    // hero collisions and movement
-    this.physics.arcade.collide( this.hero, this.platforms );
-    this.heroMove();
-
-    // for each plat form, find out which is the highest
+    // for each platform, find out which is the highest
     // if one goes below the camera view, then create a new one at a distance from the highest one
     // these are pooled so they are very performant
     this.platforms.forEachAlive( function( elem ) {
       this.platformYMin = Math.min( this.platformYMin, elem.y );
       if( elem.y > this.camera.y + this.game.height ) {
         elem.kill();
-        this.platformsCreateOne(this.rnd.integerInRange(0,this.world.width - 50), this.rnd.integerInRange(0, this.platformYMin - 150), 100 );
+        this.platformsCreateOne(this.rnd.integerInRange(0,this.world.width - 50), this.rnd.integerInRange(0, this.platformYMin - 300), 100 );
       }
     }, this );
+
+    // hero collisions and movement
+    this.physics.arcade.collide( this.hero, this.platforms );
+    this.heroMove();
   },
 
   shutdown: function() {
@@ -93,7 +111,7 @@ Jumper.Play.prototype = {
     this.platformsCreateOne( -16, this.world.height - 16, this.world.width + 16 );
     // create a batch of platforms that start to move up the level
     for( var i = 0; i < 9; i++ ) {
-      this.platformsCreateOne( this.rnd.integerInRange( 0, this.world.width - 50 ), this.world.height - 100 * i, 100 );
+      this.platformsCreateOne( this.rnd.integerInRange( 0, this.world.width - 50 ), this.world.height - 100 * i , 100 );
     }
   },
 
@@ -110,6 +128,7 @@ Jumper.Play.prototype = {
   heroCreate: function() {
     // basic hero setup
     this.hero = game.add.sprite( this.world.centerX, this.world.height - 36, 'hero' );
+    this.hero.scale.setTo(-0.2, -0.2);
     this.hero.anchor.set( 0.5 );
 
     // track where the hero started and how much the distance has changed from that point
@@ -119,8 +138,8 @@ Jumper.Play.prototype = {
     // hero collision setup
     // disable all collisions except for down
     this.physics.arcade.enable( this.hero );
-    this.hero.body.gravity.y = 500;
-    this.hero.body.velocity.y = -1000;
+    this.hero.body.gravity.y = 1500;
+    this.hero.body.velocity.y = -1500;
     this.hero.body.checkCollision.up = false;
     this.hero.body.checkCollision.left = false;
     this.hero.body.checkCollision.right = false;
@@ -139,7 +158,7 @@ Jumper.Play.prototype = {
     // handle hero jumping && this.cursor.up.isDown
     if(this.hero.body.touching.down) {
       this.hero.body.velocity.y = -1000;
-      navigator.vibrate([500]);
+    //   navigator.vibrate([500]);
     }
 
     // wrap world coordinated so that you can warp from left to right and right to left

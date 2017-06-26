@@ -38,7 +38,8 @@ Jumper.Play.prototype = {
 
     if (window.DeviceOrientationEvent) {//
         window.addEventListener("deviceorientation", function () {//gyro
-            processGyro(event.beta, event.gamma, event.alpha);
+            console.log(event.alpha + ' : ' + event.beta + ' : ' + event.gamma);
+            processGyro(event.alpha, event.beta, event.gamma);
         }, true);
     }
 
@@ -46,20 +47,20 @@ Jumper.Play.prototype = {
     var self = this
 
     function processGyro(alpha,beta,gamma){
-        if (beta > 0){
-            if (velocity.x >= 500){
+        if (gamma > 0){
+            if (velocity.x >= 400){
                 velocity.x = velocity.x
             } else {
-                velocity.x += (beta);
+                velocity.x += (gamma);
             }
-            self.hero.scale.setTo(0.2, -0.2);
-        }else if (beta < 0) {
-            if (velocity.x <= -500){
+            self.hero.scale.setTo(0.2, 0.2);
+        }else if (gamma < 0) {
+            if (velocity.x <= -400){
                 velocity.x = velocity.x
             } else {
-                velocity.x += (beta);
+                velocity.x += (gamma);
             }
-            self.hero.scale.setTo(-0.2, -0.2);
+            self.hero.scale.setTo(-0.2, 0.2);
         }
     }
   },
@@ -158,7 +159,6 @@ Jumper.Play.prototype = {
     // handle hero jumping && this.cursor.up.isDown
     if(this.hero.body.touching.down) {
       this.hero.body.velocity.y = -1000;
-    //   navigator.vibrate([500]);
     }
 
     // wrap world coordinated so that you can warp from left to right and right to left

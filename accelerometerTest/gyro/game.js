@@ -1,3 +1,4 @@
+//Trial
 window.onload = function() {
 
 	// game definition, 320x480

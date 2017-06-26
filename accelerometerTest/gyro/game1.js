@@ -1,10 +1,13 @@
+var NUMBER_OF_PLATFORM = 20
+
 var Jumper = function() {};
 Jumper.Play = function() {};
 
 Jumper.Play.prototype = {
 
   preload: function() {
-    this.load.image( 'hero', 'frame_right.png' );
+    this.load.image( 'heroUp', 'frame_right.png' );
+    this.load.image( 'heroDown', 'frameFall.png' );
     this.load.image( 'pixel', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/836/pixel_1.png' );
   },
 
@@ -38,7 +41,7 @@ Jumper.Play.prototype = {
 
     if (window.DeviceOrientationEvent) {//
         window.addEventListener("deviceorientation", function () {//gyro
-            console.log(event.alpha + ' : ' + event.beta + ' : ' + event.gamma);
+            // console.log(event.alpha + ' : ' + event.beta + ' : ' + event.gamma);
             processGyro(event.alpha, event.beta, event.gamma);
         }, true);
     }
@@ -106,12 +109,12 @@ Jumper.Play.prototype = {
     // platform basic setup
     this.platforms = this.add.group();
     this.platforms.enableBody = true;
-    this.platforms.createMultiple( 10, 'pixel' );
+    this.platforms.createMultiple( NUMBER_OF_PLATFORM, 'pixel' );
 
     // create the base platform, with buffer on either side so that the hero doesn't fall through
     this.platformsCreateOne( -16, this.world.height - 16, this.world.width + 16 );
     // create a batch of platforms that start to move up the level
-    for( var i = 0; i < 9; i++ ) {
+    for( var i = 0; i < (NUMBER_OF_PLATFORM - 1); i++ ) {
       this.platformsCreateOne( this.rnd.integerInRange( 0, this.world.width - 50 ), this.world.height - 100 * i , 100 );
     }
   },
@@ -128,7 +131,7 @@ Jumper.Play.prototype = {
 
   heroCreate: function() {
     // basic hero setup
-    this.hero = game.add.sprite( this.world.centerX, this.world.height - 36, 'hero' );
+    this.hero = game.add.sprite( this.world.centerX, this.world.height - 36, 'heroUp' );
     this.hero.scale.setTo(-0.2, -0.2);
     this.hero.anchor.set( 0.5 );
 
@@ -160,6 +163,14 @@ Jumper.Play.prototype = {
     if(this.hero.body.touching.down) {
       this.hero.body.velocity.y = -1000;
     }
+
+    if(this.hero.body.velocity.y >= 0){
+        this.hero.loadTexture('heroDown')
+    } else {
+        this.hero.loadTexture('heroUp')
+    }
+
+    console.log(this.hero.body.velocity.y);
 
     // wrap world coordinated so that you can warp from left to right and right to left
     this.world.wrap( this.hero, this.hero.width / 2, false );

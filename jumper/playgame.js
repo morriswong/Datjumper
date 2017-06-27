@@ -5,17 +5,10 @@ var playgame = function(game){};
 
 playgame.prototype = {
 
-  // preload: function() {
-  //   this.load.image( 'heroUp', 'assets/frame_right.png' );
-  //   this.load.image( 'heroDown', 'assets/frameFall.png' );
-  //   this.load.image( 'pixel', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/836/pixel_1.png' );
-  // },
-
   create: function() {
     // background color
     this.stage.backgroundColor = '#6bf';
     background = game.add.tileSprite(0, 0, game.width, game.height, "background3");
-    // this.world.sendToBack(background);
 
     // scaling
     this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -41,15 +34,13 @@ playgame.prototype = {
     // cursor controls
     this.cursor = this.input.keyboard.createCursorKeys();
 
-    var self = this
-
     if (window.DeviceOrientationEvent) {//
         window.addEventListener("deviceorientation", function () {//gyro
-            // console.log(event.beta);
             processGyro(event.alpha, event.beta, event.gamma);
         }, true);
     }
 
+    var self = this
     var velocity = this.hero.body.velocity;
 
     function processGyro(alpha,beta,gamma){
@@ -62,7 +53,6 @@ playgame.prototype = {
             else {
                 velocity.x += gamma;
             }
-
             self.hero.scale.setTo(0.2, 0.2);
         }else if (gamma < 0 && self.hero) {
             if (velocity.x <= -400){
@@ -110,13 +100,12 @@ playgame.prototype = {
    //      }
    // }, this );
 
-   //Coin killer
-   this.game.physics.arcade.overlap(this.hero, this.coins, this.onHeroVsCoin, null, this);
+    //Coin killer
+    this.game.physics.arcade.overlap(this.hero, this.coins, this.onHeroVsCoin, null, this);
 
     // hero collisions and movement
-    this.physics.arcade.collide( this.hero, this.platforms );
+    this.physics.arcade.collide( this.hero, this.platforms, this.findPlatfromType, null, this );
     this.heroMove();
-
   },
 
   shutdown: function() {
@@ -154,14 +143,25 @@ playgame.prototype = {
    },
 
    onHeroVsCoin: function(hero, coin) {
-     //   console.log("pet");
        coin.kill();
     },
+
+   findPlatfromType: function(hero, platfrom){
+       if (platfrom.kind == "double" && this.hero.body.touching.down){
+           console.log("double");
+           this.hero.body.velocity.y = -2000;
+           return false
+       } else if (this.hero.body.touching.down){
+           this.hero.body.velocity.y = -1000;
+           return true
+       }
+   },
 
   platformsCreate: function() {
     // platform basic setup
     this.platforms = this.add.group();
     this.platforms.enableBody = true;
+    // this.physics.p2.enable( this.platforms, false);
     this.platforms.createMultiple( NUMBER_OF_PLATFORM, 'pixel' );
 
     // create the base platform, with buffer on either side so that the hero doesn't fall through
@@ -180,17 +180,16 @@ playgame.prototype = {
     platform.scale.y = 16;
     platform.body.immovable = true;
 
-    if (game.rnd.between(0, 1)!=0){
-        platform.type = "double";
+    if (game.rnd.between(0, 0.5)!=0){
+        platform.kind = "double";
         platform.tint =  0xF6FA05;
-        platform.scale.y = 22;
+        platform.scale.y = 32;
         platform.overlap = function(){
             kill.platform;
         };
     } else {
-        platform.type = "normal";
+        platform.kind = "normal";
     }
-
     return platform;
   },
 
@@ -218,16 +217,18 @@ playgame.prototype = {
     // handle the left and right movement of the hero
     if( this.cursor.left.isDown ) {
       this.hero.body.velocity.x = -400;
+      this.hero.scale.setTo(-0.2, 0.2);
     } else if( this.cursor.right.isDown ) {
       this.hero.body.velocity.x = 400;
+      this.hero.scale.setTo(0.2, 0.2);
     } else {
       this.hero.body.velocity.x = 0;
     }
 
     // handle hero jumping && this.cursor.up.isDown
-    if(this.hero.body.touching.down) {
-      this.hero.body.velocity.y = -1000;
-    }
+    // if(this.hero.body.touching.down ) {
+    //   this.hero.body.velocity.y = -1000;
+    // }
 
     if(this.hero.body.velocity.y >= 0){
         this.hero.loadTexture('heroDown')

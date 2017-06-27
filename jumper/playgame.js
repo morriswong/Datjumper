@@ -6,7 +6,10 @@ var playgame = function(game){};
 playgame.prototype = {
 
   create: function() {
-    // background color
+    this.sfx = {
+        coin: this.game.add.audio('sfxcoin'),
+    };
+        // background color
     this.stage.backgroundColor = '#6bf';
     background = game.add.tileSprite(0, 0, game.width, game.height, "background3");
 
@@ -149,6 +152,7 @@ playgame.prototype = {
        if (this.hero.body.touching.down){
            this.hero.body.velocity.y = -1200;
        }
+       this.sfx.coin.play();
        coin.kill();
     },
 

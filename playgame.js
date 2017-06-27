@@ -1,31 +1,28 @@
 var NUMBER_OF_PLATFORM = 20
 var background
-
+var health = 100
 var playgame = function(game){};
 
 playgame.prototype = {
 
-  // preload: function() {
-  //   this.load.image( 'heroUp', 'assets/frame_right.png' );
-  //   this.load.image( 'heroDown', 'assets/frameFall.png' );
-  //   this.load.image( 'pixel', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/836/pixel_1.png' );
-  // },
-
   create: function() {
 
-  	var barConfig = {width: 450,
-    height: 40,
-    x: 250,
-    y: 40,
-    bg: {
-      color: '#651828'
-    },
-    bar: {
-      color: '#FEFF03'
-    },
-    animationDuration: 200,
-    flipped: false,
-    isFixedToCamera: true};
+    //Setting up health bar
+    var barConfig = {
+        width: 450,
+        height: 40,
+        x: 250,
+        y: 40,
+        bg: {
+            color: '#651828'
+        },
+        bar: {
+            color: '#FEFF03'
+        },
+        animationDuration: 200,
+        flipped: false,
+        isFixedToCamera: true
+    };
     this.myHealthBar = new HealthBar(this.game, barConfig);
     this.world.bringToTop(this.myHealthBar);
     this.sfx = {
@@ -60,15 +57,13 @@ playgame.prototype = {
     // cursor controls
     this.cursor = this.input.keyboard.createCursorKeys();
 
-    var self = this
-
     if (window.DeviceOrientationEvent) {//
         window.addEventListener("deviceorientation", function () {//gyro
-            // console.log(event.beta);
             processGyro(event.alpha, event.beta, event.gamma);
         }, true);
     }
 
+    var self = this
     var velocity = this.hero.body.velocity;
 
     function processGyro(alpha,beta,gamma){
@@ -81,7 +76,6 @@ playgame.prototype = {
             else {
                 velocity.x += gamma;
             }
-
             self.hero.scale.setTo(0.2, 0.2);
         }else if (gamma < 0 && self.hero) {
             if (velocity.x <= -400){
@@ -129,13 +123,13 @@ playgame.prototype = {
    //      }
    // }, this );
 
-   //Coin killer
-   this.game.physics.arcade.overlap(this.hero, this.coins, this.onHeroVsCoin, null, this);
+    //Coin killer
+    this.physics.arcade.overlap(this.hero, this.coins, this.onHeroVsCoin, null, this);
+    // this.physics.arcade.collide(this.hero, this.coins, this.findPlatformType, null, this);
 
     // hero collisions and movement
-    this.physics.arcade.collide( this.hero, this.platforms );
+    this.physics.arcade.collide( this.hero, this.platforms, this.findPlatformType, null, this );
     this.heroMove();
-
   },
 
   shutdown: function() {
@@ -148,13 +142,15 @@ playgame.prototype = {
     this.platforms = null;
   },
 
+// COINS
+
   coinsCreate: function() {
     // coins basic setup
     this.coins = this.add.group();
     this.coins.enableBody = true;
-    this.coins.createMultiple( 1000, 'coin' );
+    this.coins.createMultiple( 2000, 'coin' );
     // create a batch of coins
-    for( var i = 0; i <= 980; i++ ) {
+    for( var i = 0; i <= 1999; i++ ) {
         this.coinsCreateOne( this.rnd.integerInRange( 0, this.world.width - 50 ), this.world.height - 100*i, 2);
     }
   },
@@ -173,14 +169,23 @@ playgame.prototype = {
    },
 
    onHeroVsCoin: function(hero, coin) {
+       if (this.hero.body.touching.down){
+           this.hero.body.velocity.y = -1200;
+       }
        this.sfx.coin.play();
+       if(health < 100){
+       health += 4;}
+       this.myHealthBar.setPercent(health);
        coin.kill();
     },
+
+// PLATFROMS
 
   platformsCreate: function() {
     // platform basic setup
     this.platforms = this.add.group();
     this.platforms.enableBody = true;
+    // this.physics.p2.enable( this.platforms, false);
     this.platforms.createMultiple( NUMBER_OF_PLATFORM, 'pixel' );
 
     // create the base platform, with buffer on either side so that the hero doesn't fall through
@@ -199,18 +204,33 @@ playgame.prototype = {
     platform.scale.y = 16;
     platform.body.immovable = true;
 
-    if (game.rnd.between(0, 1)!=0){
-        platform.type = "double";
+    if (game.rnd.between(0, 0.5)!=0){
+        platform.kind = "double";
         platform.tint =  0xF6FA05;
-        platform.scale.y = 22;
+        platform.scale.y = 32;
         platform.overlap = function(){
             kill.platform;
         };
     } else {
-        platform.type = "normal";
+        platform.kind = "normal";
     }
-
     return platform;
+  },
+
+  //Not working while heroMove exist
+  findPlatformType: function(hero, platform){
+      if (platform.kind == "double" && this.hero.body.touching.down){
+          this.hero.body.velocity.y = -2000;
+          health -= 15;
+          this.myHealthBar.setPercent(health);
+      } else if (this.hero.body.touching.down){
+          this.hero.body.velocity.y = -1000;
+          health -= 8;
+          this.myHealthBar.setPercent(health);
+      } else {
+          this.hero.body.velocity.y = -1100;
+      }
+
   },
 
   heroCreate: function() {
@@ -237,18 +257,20 @@ playgame.prototype = {
     // handle the left and right movement of the hero
     if( this.cursor.left.isDown ) {
       this.hero.body.velocity.x = -400;
+      this.hero.scale.setTo(-0.2, 0.2);
     } else if( this.cursor.right.isDown ) {
       this.hero.body.velocity.x = 400;
+      this.hero.scale.setTo(0.2, 0.2);
     } else {
       this.hero.body.velocity.x = 0;
     }
 
     // handle hero jumping && this.cursor.up.isDown
-    if(this.hero.body.touching.down) {
-      this.hero.body.velocity.y = -1000;
-    }
+    // if (this.hero.body.touching.down) {
+    //   this.hero.body.velocity.y = -1000;
+    // }
 
-    if(this.hero.body.velocity.y >= 0){
+    if (this.hero.body.velocity.y >= 0){
         this.hero.loadTexture('heroDown')
     } else {
         this.hero.loadTexture('heroUp')
@@ -261,9 +283,14 @@ playgame.prototype = {
 
     // track the maximum amount that the hero has travelled
     this.hero.yChange = Math.max( this.hero.yChange, Math.abs( this.hero.y - this.hero.yOrig ) );
-
+    //0 Health gameover
+    if(health < 1 && this.hero.alive ) {
+      health = 100;
+      this.state.start( 'GameOverScreen' );
+          }
     // if the hero falls below the camera view, gameover
     if( this.hero.y > this.cameraYMin + this.game.height && this.hero.alive ) {
+      health = 100;
       this.state.start( 'GameOverScreen' );
     }
   }

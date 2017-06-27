@@ -5,10 +5,10 @@ preload.prototype = {
 		var loadingBar = this.add.sprite(game.width / 2, game.height / 2, "loading");
 		loadingBar.anchor.setTo(0.5,0.5);
 		game.load.setPreloadSprite(loadingBar);
-        game.load.image("background", "assets/sprites/background.png");  //preload background iamge for titlescreen
+        game.load.image("background", "assets/sprites/backgrounds1.png");  //preload background iamge for titlescreen
         game.load.image("title", "assets/sprites/jump_opt.png");  //preload image for titlescreen
         game.load.image("playbutton", "assets/sprites/playbutton2.png"); //preload image for titlescreen
-        game.load.image("background3", "assets/sprites/background3.png"); //preload background for playgame
+        game.load.image("backgrounds", "assets/sprites/backgrounds1.png"); //preload background for playgame
         game.load.image("background2", "assets/sprites/background2.png"); //preload background for game over
         game.load.image("replay", "assets/sprites/replay.png"); //preload replay button
         game.load.image("separator", "assets/sprites/separator.png");

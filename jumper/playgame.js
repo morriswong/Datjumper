@@ -14,7 +14,7 @@ playgame.prototype = {
   create: function() {
     // background color
     this.stage.backgroundColor = '#6bf';
-    background = game.add.tileSprite(0, 0, game.width, game.height, "background3");
+    backgrounds = game.add.tileSprite(0, 0, game.width, game.height, "backgrounds");
     // this.world.sendToBack(background);
 
     // scaling
@@ -79,7 +79,9 @@ playgame.prototype = {
   },
 
   update: function() {
-    background.position.y = this.camera.y;
+      
+    backgrounds.tilePosition.y += 0.35
+    backgrounds.position.y = this.camera.y;
     // this is where the main magic happens
     // the y offset and the height of the world are adjusted
     // to match the highest point the hero has reached
@@ -194,6 +196,13 @@ playgame.prototype = {
     return platform;
   },
 
+  // backgroundsCreate: function() {
+  //     this.backgrounds = this.add.group();
+  //     this.backgroundscreateMultiple(1, 'backgrounds', [1,2,3], true);
+  //     this.alignIn(game.world.bounds, Phaser.CENTER);
+  //     this.background.scsrooly = 0;
+  // }
+
   heroCreate: function() {
     // basic hero setup
     this.hero = game.add.sprite( this.world.centerX, this.world.height - 36, 'heroUp' );
@@ -218,8 +227,10 @@ playgame.prototype = {
     // handle the left and right movement of the hero
     if( this.cursor.left.isDown ) {
       this.hero.body.velocity.x = -400;
+      this.hero.scale.setTo(-0.2, 0.2);
     } else if( this.cursor.right.isDown ) {
       this.hero.body.velocity.x = 400;
+      this.hero.scale.setTo(0.2, 0.2);
     } else {
       this.hero.body.velocity.x = 0;
     }

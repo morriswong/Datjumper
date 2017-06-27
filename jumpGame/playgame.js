@@ -4,6 +4,18 @@ var playgame = function(game){};
 
 var friendlyBarRatio = 2;
 
+// var preload = function(game){};
+//     preload.prototype = {
+//         preload: function() {
+//             game.load.image("background", "assets/sprites/background.png");  //preload background iamge for titlescreen
+//             game.load.image("title", "assets/sprites/jump_opt.png");  //preload image for titlescreen
+//             game.load.image("playbutton", "assets/sprites/playbutton2.png"); //preload image for titlescreen
+//             game.load.image("background3", "assets/sprites/background3.png"); //preload background for playgame
+//             game.load.image("background2", "assets/sprites/background2.png"); //preload background for game over
+// 			}
+//         }
+
+
 // Barrier class - global variable for new barrier to access
 var Barrier = function (game, speed, tintColor) {
 	var positions = [(game.width - tunnelWidth) / 2, (game.width + tunnelWidth) / 2];
@@ -48,6 +60,8 @@ Barrier.prototype.update = function(){
 		this.destroy();
 	}
 }
+
+
 
 //-----------------------------------------------------------------------------------------
 
@@ -205,6 +219,8 @@ Barrier.prototype.update = function(){
 					this.restartShip();
 			    }
 		    }
+
+			//tunnelBG.tilePosition.y += 2;
 
             //check for collision
             if(!this.ship.destroyed && this.ship.alpha == 1){

@@ -12,7 +12,10 @@ playgame.prototype = {
   // },
 
   create: function() {
-    // background color
+    this.sfx = {
+        coin: this.game.add.audio('sfxcoin'),
+    };
+        // background color
     this.stage.backgroundColor = '#6bf';
     background = game.add.tileSprite(0, 0, game.width, game.height, "background3");
     // this.world.sendToBack(background);
@@ -154,7 +157,7 @@ playgame.prototype = {
    },
 
    onHeroVsCoin: function(hero, coin) {
-     //   console.log("pet");
+       this.sfx.coin.play();
        coin.kill();
     },
 

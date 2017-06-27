@@ -101,10 +101,11 @@ playgame.prototype = {
    // }, this );
 
     //Coin killer
-    this.game.physics.arcade.overlap(this.hero, this.coins, this.onHeroVsCoin, null, this);
+    this.physics.arcade.overlap(this.hero, this.coins, this.onHeroVsCoin, null, this);
+    // this.physics.arcade.collide(this.hero, this.coins, this.findPlatformType, null, this);
 
     // hero collisions and movement
-    this.physics.arcade.collide( this.hero, this.platforms, this.findPlatfromType, null, this );
+    this.physics.arcade.collide( this.hero, this.platforms, this.findPlatformType, null, this );
     this.heroMove();
   },
 
@@ -117,6 +118,8 @@ playgame.prototype = {
     this.platforms.destroy();
     this.platforms = null;
   },
+
+// COINS
 
   coinsCreate: function() {
     // coins basic setup
@@ -143,19 +146,13 @@ playgame.prototype = {
    },
 
    onHeroVsCoin: function(hero, coin) {
+       if (this.hero.body.touching.down){
+           this.hero.body.velocity.y = -1200;
+       }
        coin.kill();
     },
 
-   findPlatfromType: function(hero, platfrom){
-       if (platfrom.kind == "double" && this.hero.body.touching.down){
-           console.log("double");
-           this.hero.body.velocity.y = -2000;
-           return false
-       } else if (this.hero.body.touching.down){
-           this.hero.body.velocity.y = -1000;
-           return true
-       }
-   },
+// PLATFROMS
 
   platformsCreate: function() {
     // platform basic setup
@@ -193,6 +190,18 @@ playgame.prototype = {
     return platform;
   },
 
+  //Not working while heroMove exist
+  findPlatformType: function(hero, platform){
+      if (platform.kind == "double" && this.hero.body.touching.down){
+          this.hero.body.velocity.y = -2000;
+      } else if (this.hero.body.touching.down){
+          this.hero.body.velocity.y = -1000;
+      } else {
+          this.hero.body.velocity.y = -1100;
+      }
+
+  },
+
   heroCreate: function() {
     // basic hero setup
     this.hero = game.add.sprite( this.world.centerX, this.world.height - 36, 'heroUp' );
@@ -226,11 +235,11 @@ playgame.prototype = {
     }
 
     // handle hero jumping && this.cursor.up.isDown
-    // if(this.hero.body.touching.down ) {
+    // if (this.hero.body.touching.down) {
     //   this.hero.body.velocity.y = -1000;
     // }
 
-    if(this.hero.body.velocity.y >= 0){
+    if (this.hero.body.velocity.y >= 0){
         this.hero.loadTexture('heroDown')
     } else {
         this.hero.loadTexture('heroUp')

@@ -16,7 +16,7 @@ window.onload = function() {
 var boot = function(game){};
 boot.prototype = {
 	preload: function(){
-		this.game.load.image("loading","assets/sprites/loading.png");   //loading bar e.g. http://github.hubspot.com/pace/docs/welcome/
+		game.load.image("loading","assets/sprites/jump_opt.png");   //loading bar e.g. http://github.hubspot.com/pace/docs/welcome/
 	},
 	create: function(){
         // this.scale.pageAlignHorizontally = true;

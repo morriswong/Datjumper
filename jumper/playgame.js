@@ -1,12 +1,7 @@
 var NUMBER_OF_PLATFORM = 20
 var background
 
-var Jumper = function() {};
-Jumper.Play = function() {};
-
 var playgame = function(game){};
-
-// Jumper.Play.prototype = {
 
 playgame.prototype = {
 
@@ -34,9 +29,11 @@ playgame.prototype = {
     // camera and platform tracking vars
     this.cameraYMin = 99999;
     this.platformYMin = 99999;
+    this.coinYmin = 99999;
 
     // create platforms
     this.platformsCreate();
+    this.coinsCreate();
 
     // create hero
     this.heroCreate();
@@ -48,6 +45,7 @@ playgame.prototype = {
 
     if (window.DeviceOrientationEvent) {//
         window.addEventListener("deviceorientation", function () {//gyro
+            // console.log(event.beta);
             processGyro(event.alpha, event.beta, event.gamma);
         }, true);
     }
@@ -58,20 +56,22 @@ playgame.prototype = {
         if (gamma > 0 && self.hero){
             if (velocity.x >= 400){
                 velocity.x = velocity.x
-            } else if (gamma > 15) {
-                velocity.x += (gamma * 1.5);
-            } else {
-                velocity.x += (gamma);
+            }
+            else if (gamma > 10) {
+                velocity.x += (gamma * 1.5);}
+            else {
+                velocity.x += gamma;
             }
 
             self.hero.scale.setTo(0.2, 0.2);
         }else if (gamma < 0 && self.hero) {
             if (velocity.x <= -400){
                 velocity.x = velocity.x
-            }else if (gamma < -15) {
-                velocity.x += (gamma * 1.5);
-            } else {
-                velocity.x += (gamma);
+            }
+            else if (gamma < -10) {
+                velocity.x += (gamma * 1.5);}
+            else {
+                velocity.x += gamma;
             }
             self.hero.scale.setTo(-0.2, 0.2);
         }
@@ -79,9 +79,8 @@ playgame.prototype = {
   },
 
   update: function() {
-    // this is where the main magic happens
     background.position.y = this.camera.y;
-
+    // this is where the main magic happens
     // the y offset and the height of the world are adjusted
     // to match the highest point the hero has reached
     this.world.setBounds( 0, -this.hero.yChange, this.world.width, this.game.height + this.hero.yChange );
@@ -90,19 +89,29 @@ playgame.prototype = {
     // this is a custom follow style that will not ever move down, it only moves up
     this.cameraYMin = Math.min( this.cameraYMin, this.hero.y - this.game.height + 500 );
     this.camera.y = this.cameraYMin;
-    // background = game.add.tileSprite(0, this.camera.y, game.width*2, game.height*2, "background3");
-    // this.world.sendToBack(background);
 
     // for each platform, find out which is the highest
     // if one goes below the camera view, then create a new one at a distance from the highest one
     // these are pooled so they are very performant
     this.platforms.forEachAlive( function( elem ) {
-      this.platformYMin = Math.min( this.platformYMin, elem.y );
-      if( elem.y > this.camera.y + this.game.height ) {
-        elem.kill();
-        this.platformsCreateOne(this.rnd.integerInRange(0,this.world.width - 70), this.rnd.integerInRange(this.platformYMin - 100, this.platformYMin - 200), 100 );
-      }
+        this.platformYMin = Math.min( this.platformYMin, elem.y );
+        if( elem.y > this.camera.y + this.game.height ) {
+            elem.kill();
+            this.platformsCreateOne(this.rnd.integerInRange(0,this.world.width - 70), this.rnd.integerInRange(this.platformYMin - 100, this.platformYMin - 200), 100 );
+        }
     }, this );
+
+    //creating coins
+   //  this.coins.forEachAlive( function( elem ) {
+   //      this.coinYMin = Math.min( this.coinYMin, elem.y );
+   //      if( elem.y > this.camera.y + this.game.height ) {
+   //          elem.kill();
+   //          this.coinsCreateOne(this.rnd.integerInRange(0,this.world.width -70), this.rnd.integerInRange(this.coinYMin - 100, this.coinYMin - 200), 1 );
+   //      }
+   // }, this );
+
+   //Coin killer
+   this.game.physics.arcade.overlap(this.hero, this.coins, this.onHeroVsCoin, null, this);
 
     // hero collisions and movement
     this.physics.arcade.collide( this.hero, this.platforms );
@@ -119,6 +128,35 @@ playgame.prototype = {
     this.platforms.destroy();
     this.platforms = null;
   },
+
+  coinsCreate: function() {
+    // coins basic setup
+    this.coins = this.add.group();
+    this.coins.enableBody = true;
+    this.coins.createMultiple( 200, 'coin' );
+    // create a batch of coins
+    for( var i = 0; i <= 45; i++ ) {
+        this.coinsCreateOne( this.rnd.integerInRange( 0, this.world.width - 50 ), this.world.height - 100*i, 2);
+    }
+  },
+
+  coinsCreateOne: function( x, y, width ) {
+    // this is a helper function since writing all of this out can get verbose elsewhere
+    var coin = this.coins.getFirstDead();
+    coin.reset( x, y );
+    coin.scale.x = width;
+    coin.scale.y = 2;
+    coin.body.immovable = true;
+    this.game.physics.enable(coin);
+    coin.animations.add('rotate', [0, 1, 2, 1], 6, true); // 6fps, looped
+    coin.animations.play('rotate');
+    return coin;
+   },
+
+   onHeroVsCoin: function(hero, coin) {
+     //   console.log("pet");
+       coin.kill();
+    },
 
   platformsCreate: function() {
     // platform basic setup
@@ -141,6 +179,18 @@ playgame.prototype = {
     platform.scale.x = width;
     platform.scale.y = 16;
     platform.body.immovable = true;
+
+    if (game.rnd.between(0, 1)!=0){
+        platform.type = "double";
+        platform.tint =  0xF6FA05;
+        platform.scale.y = 22;
+        platform.overlap = function(){
+            kill.platform;
+        };
+    } else {
+        platform.type = "normal";
+    }
+
     return platform;
   },
 
@@ -166,13 +216,13 @@ playgame.prototype = {
 
   heroMove: function() {
     // handle the left and right movement of the hero
-    // if( this.cursor.left.isDown ) {
-    //   this.hero.body.velocity.x = -400;
-    // } else if( this.cursor.right.isDown ) {
-    //   this.hero.body.velocity.x = 400;
-    // } else {
-    //   this.hero.body.velocity.x = 0;
-    // }
+    if( this.cursor.left.isDown ) {
+      this.hero.body.velocity.x = -400;
+    } else if( this.cursor.right.isDown ) {
+      this.hero.body.velocity.x = 400;
+    } else {
+      this.hero.body.velocity.x = 0;
+    }
 
     // handle hero jumping && this.cursor.up.isDown
     if(this.hero.body.touching.down) {
@@ -185,7 +235,7 @@ playgame.prototype = {
         this.hero.loadTexture('heroUp')
     }
 
-    console.log(this.hero.body.velocity.y);
+    // console.log(this.hero.body.velocity.y);
 
     // wrap world coordinated so that you can warp from left to right and right to left
     this.world.wrap( this.hero, this.hero.width / 2, false );
@@ -199,7 +249,3 @@ playgame.prototype = {
     }
   }
 }
-
-// var game = new Phaser.Game( 640,960, Phaser.CANVAS, '' );
-// game.state.add( 'Play', Jumper.Play );
-// game.state.start( 'Play' );

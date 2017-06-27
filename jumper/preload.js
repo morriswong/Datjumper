@@ -19,6 +19,7 @@ preload.prototype = {
         game.load.image( 'heroDown', 'assets/sprites/frameFall.png' );
         game.load.spritesheet('coin', 'assets/sprites/coin_spritesheet.png', 22, 22);
         game.load.audio('sfxcoin', 'assets/audio/coin.wav');
+        game.load.audio('sfxdouble', 'assets/audio/doubleJump.wav');
         game.load.image( 'pixel', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/836/pixel_1.png' );
     },
 

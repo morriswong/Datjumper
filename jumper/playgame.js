@@ -1,5 +1,6 @@
 var NUMBER_OF_PLATFORM = 20
 var background
+var health = 100
 
 var playgame = function(game){};
 
@@ -27,6 +28,7 @@ playgame.prototype = {
     this.world.bringToTop(this.myHealthBar);
     this.sfx = {
         coin: this.game.add.audio('sfxcoin'),
+        double: this.game.add.audio('sfxdouble')
     };
         // background color
     this.stage.backgroundColor = '#6bf';
@@ -57,8 +59,8 @@ playgame.prototype = {
     // cursor controls
     this.cursor = this.input.keyboard.createCursorKeys();
 
-    if (window.DeviceOrientationEvent) {//
-        window.addEventListener("deviceorientation", function () {//gyro
+    if (window.DeviceOrientationEvent) {
+        window.addEventListener("deviceorientation", function () {
             processGyro(event.alpha, event.beta, event.gamma);
         }, true);
     }
@@ -173,6 +175,10 @@ playgame.prototype = {
            this.hero.body.velocity.y = -1200;
        }
        this.sfx.coin.play();
+       if(health < 100){
+           health += 4;
+       }
+       this.myHealthBar.setPercent(health);
        coin.kill();
     },
 
@@ -218,8 +224,13 @@ playgame.prototype = {
   findPlatformType: function(hero, platform){
       if (platform.kind == "double" && this.hero.body.touching.down){
           this.hero.body.velocity.y = -2000;
+          health -= 15;
+          this.myHealthBar.setPercent(health);
+          this.sfx.double.play();
       } else if (this.hero.body.touching.down){
           this.hero.body.velocity.y = -1000;
+          health -= 8;
+          this.myHealthBar.setPercent(health);
       } else {
           this.hero.body.velocity.y = -1100;
       }
@@ -258,18 +269,11 @@ playgame.prototype = {
       this.hero.body.velocity.x = 0;
     }
 
-    // handle hero jumping && this.cursor.up.isDown
-    // if (this.hero.body.touching.down) {
-    //   this.hero.body.velocity.y = -1000;
-    // }
-
     if (this.hero.body.velocity.y >= 0){
         this.hero.loadTexture('heroDown')
     } else {
         this.hero.loadTexture('heroUp')
     }
-
-    // console.log(this.hero.body.velocity.y);
 
     // wrap world coordinated so that you can warp from left to right and right to left
     this.world.wrap( this.hero, this.hero.width / 2, false );
@@ -277,8 +281,15 @@ playgame.prototype = {
     // track the maximum amount that the hero has travelled
     this.hero.yChange = Math.max( this.hero.yChange, Math.abs( this.hero.y - this.hero.yOrig ) );
 
+    //0 Health gameover
+    if(health < 1 && this.hero.alive ) {
+        health = 100;
+        this.state.start( 'GameOverScreen' );
+    }
+
     // if the hero falls below the camera view, gameover
     if( this.hero.y > this.cameraYMin + this.game.height && this.hero.alive ) {
+      health = 100
       this.state.start( 'GameOverScreen' );
     }
   }

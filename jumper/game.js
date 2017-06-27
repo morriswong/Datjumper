@@ -8,14 +8,15 @@ window.onload = function() {
 	game.state.add("PlayGame", playgame);
 	game.state.add("GameOverScreen", gameoverscreen);
 	game.state.start("Boot");
-    game.state.start("Preload");
 };
 
 var boot = function(game){};
 boot.prototype = {
-	preload: function(){
-		game.load.image("loading","assets/sprites/jump_opt.png");   //loading bar e.g. http://github.hubspot.com/pace/docs/welcome/
+
+    preload: function(){
+		game.load.image("loading","assets/sprites/loading.png");   //loading bar e.g. http://github.hubspot.com/pace/docs/welcome/
 	},
+
 	create: function(){
         console.log("loaded image");
 		game.scale.pageAlignHorizontally = true;

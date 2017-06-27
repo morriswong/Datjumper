@@ -6,12 +6,32 @@ var playgame = function(game){};
 playgame.prototype = {
 
   create: function() {
+
+    //Setting up health bar
+    var barConfig = {
+        width: 450,
+        height: 40,
+        x: 250,
+        y: 40,
+        bg: {
+            color: '#651828'
+        },
+        bar: {
+            color: '#FEFF03'
+        },
+        animationDuration: 200,
+        flipped: false,
+        isFixedToCamera: true
+    };
+    this.myHealthBar = new HealthBar(this.game, barConfig);
+    this.world.bringToTop(this.myHealthBar);
     this.sfx = {
         coin: this.game.add.audio('sfxcoin'),
     };
         // background color
     this.stage.backgroundColor = '#6bf';
     background = game.add.tileSprite(0, 0, game.width, game.height, "background3");
+    this.world.sendToBack(background);
 
     // scaling
     this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -128,9 +148,9 @@ playgame.prototype = {
     // coins basic setup
     this.coins = this.add.group();
     this.coins.enableBody = true;
-    this.coins.createMultiple( 200, 'coin' );
+    this.coins.createMultiple( 2000, 'coin' );
     // create a batch of coins
-    for( var i = 0; i <= 45; i++ ) {
+    for( var i = 0; i <= 1999; i++ ) {
         this.coinsCreateOne( this.rnd.integerInRange( 0, this.world.width - 50 ), this.world.height - 100*i, 2);
     }
   },

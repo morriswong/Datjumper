@@ -2,6 +2,7 @@ var preload = function(game){};
 
 preload.prototype = {
     preload: function(){
+        // game.load.image("loading","assets/sprites/loading.png");
 		var loadingBar = this.add.sprite(game.width / 2, game.height / 2, "loading");
 		loadingBar.anchor.setTo(0.5,0.5);
 		game.load.setPreloadSprite(loadingBar);
@@ -16,7 +17,8 @@ preload.prototype = {
 
         game.load.image( 'heroUp', 'assets/sprites/frame_right.png' );
         game.load.image( 'heroDown', 'assets/sprites/frameFall.png' );
-        this.game.load.spritesheet('coin', 'assets/sprites/coin_spritesheet.png', 22, 22);
+        game.load.spritesheet('coin', 'assets/sprites/coin_spritesheet.png', 22, 22);
+        game.load.audio('sfxcoin', 'assets/audio/coin.wav');
         game.load.image( 'pixel', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/836/pixel_1.png' );
     },
 

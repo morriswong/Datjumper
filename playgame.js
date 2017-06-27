@@ -1,6 +1,6 @@
 var NUMBER_OF_PLATFORM = 20
 var background
-
+var health = 100
 var playgame = function(game){};
 
 playgame.prototype = {
@@ -92,9 +92,7 @@ playgame.prototype = {
   },
 
   update: function() {
-
-    backgrounds.tilePosition.y += 0.35
-    backgrounds.position.y = this.camera.y;
+    background.position.y = this.camera.y;
     // this is where the main magic happens
     // the y offset and the height of the world are adjusted
     // to match the highest point the hero has reached
@@ -175,6 +173,9 @@ playgame.prototype = {
            this.hero.body.velocity.y = -1200;
        }
        this.sfx.coin.play();
+       if(health < 100){
+       health += 4;}
+       this.myHealthBar.setPercent(health);
        coin.kill();
     },
 
@@ -220,8 +221,12 @@ playgame.prototype = {
   findPlatformType: function(hero, platform){
       if (platform.kind == "double" && this.hero.body.touching.down){
           this.hero.body.velocity.y = -2000;
+          health -= 15;
+          this.myHealthBar.setPercent(health);
       } else if (this.hero.body.touching.down){
           this.hero.body.velocity.y = -1000;
+          health -= 8;
+          this.myHealthBar.setPercent(health);
       } else {
           this.hero.body.velocity.y = -1100;
       }
@@ -278,9 +283,14 @@ playgame.prototype = {
 
     // track the maximum amount that the hero has travelled
     this.hero.yChange = Math.max( this.hero.yChange, Math.abs( this.hero.y - this.hero.yOrig ) );
-
+    //0 Health gameover
+    if(health < 1 && this.hero.alive ) {
+      health = 100;
+      this.state.start( 'GameOverScreen' );
+          }
     // if the hero falls below the camera view, gameover
     if( this.hero.y > this.cameraYMin + this.game.height && this.hero.alive ) {
+      health = 100;
       this.state.start( 'GameOverScreen' );
     }
   }

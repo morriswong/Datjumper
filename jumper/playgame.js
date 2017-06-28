@@ -1,6 +1,12 @@
 var NUMBER_OF_PLATFORM = 20
 var background
 var health = 100
+var coins= 0
+var canSwipe = true
+var swipeDistance = 200
+var swipePowah = 1
+
+var coins = 0;
 
 var playgame = function(game){};
 
@@ -28,11 +34,13 @@ playgame.prototype = {
     this.world.bringToTop(this.myHealthBar); //Not working
     this.sfx = {
         coin: this.game.add.audio('sfxcoin'),
-        double: this.game.add.audio('sfxdouble')
+        double: this.game.add.audio('sfxdouble'),
+        gameplay: this.game.add.audio('sfxgameplay')
     };
+    this.sfx.gameplay.play();
         // background color
     this.stage.backgroundColor = '#6bf';
-    background = game.add.tileSprite(0, 0, game.width, game.height, "background3");
+    background = game.add.tileSprite(0, 0, game.width, game.height, "background");
     this.world.sendToBack(background);
 
     // scaling
@@ -94,6 +102,8 @@ playgame.prototype = {
   },
 
   update: function() {
+
+    background.tilePosition.y += 0.35
     background.position.y = this.camera.y;
     // this is where the main magic happens
     // the y offset and the height of the world are adjusted
@@ -132,8 +142,7 @@ playgame.prototype = {
     // hero collisions and movement
     this.physics.arcade.collide( this.hero, this.platforms, this.findPlatformType, null, this );
     this.heroMove();
-
-    // console.log(parseInt(this.hero.body.y - 830) * -1);
+    score = parseInt(this.hero.body.y - 830) * -1;
   },
 
   shutdown: function() {
@@ -152,9 +161,9 @@ playgame.prototype = {
     // coins basic setup
     this.coins = this.add.group();
     this.coins.enableBody = true;
-    this.coins.createMultiple( 20, 'coin' );
+    this.coins.createMultiple( 21, 'coin' );
     // create a batch of coins
-    for( var i = 0; i <= 19; i++ ) {
+    for( var i = 0; i <= 20; i++ ) {
         this.coinsCreateOne( this.rnd.integerInRange( 0, this.world.width - 50 ), this.world.height - 100*i, 2);
     }
   },
@@ -172,6 +181,7 @@ playgame.prototype = {
     return coin;
    },
 
+
    onHeroVsCoin: function(hero, coin) {
        if (this.hero.body.touching.down){
            this.hero.body.velocity.y = -1200;
@@ -181,8 +191,11 @@ playgame.prototype = {
        }
        this.sfx.coin.play();
        this.myHealthBar.setPercent(health);
+       coins += 1;
        coin.kill();
+       coins += 1
     },
+
 
 // PLATFROMS
 
@@ -274,6 +287,21 @@ playgame.prototype = {
         this.hero.loadTexture('heroDown')
     } else {
         this.hero.loadTexture('heroUp')
+    }
+    //Swipe special movement
+    if(canSwipe == true){
+        if(Phaser.Point.distance(game.input.activePointer.positionDown,
+            game.input.activePointer.positionUp) > swipeDistance){
+                if(this.hero.body.velocity.y > 0){
+                this.hero.body.velocity.y = -(600 + 200*swipePowah);}
+                else{
+                this.hero.body.velocity.y -= (600 + 200*swipePowah);
+                }
+                canSwipe = false;
+                setTimeout(function(){
+        canSwipe = true; //Enables swipe again
+    }, (21000 - 1000*swipePowah)); //1 second less of wait for each point in swipePowah!
+        }
     }
 
     // wrap world coordinated so that you can warp from left to right and right to left

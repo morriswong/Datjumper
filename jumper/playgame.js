@@ -93,7 +93,7 @@ playgame.prototype = {
 
   update: function() {
 
-    backgrounds.tilePosition.y += 0.35
+    // backgrounds.tilePosition.y += 0.35
     backgrounds.position.y = this.camera.y;
     // this is where the main magic happens
     // the y offset and the height of the world are adjusted

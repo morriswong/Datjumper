@@ -20,7 +20,8 @@ preload.prototype = {
         game.load.spritesheet('coin', 'assets/sprites/coin_spritesheet.png', 22, 22);
         game.load.audio('sfxcoin', 'assets/audio/coin.wav');
         game.load.audio('sfxdouble', 'assets/audio/doubleJump.wav');
-        game.load.image( 'pixel', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/836/pixel_1.png' );
+        game.load.image( 'pixel', 'https://raw.githubusercontent.com/photonstorm/phaser-coding-tips/master/issue-003/assets/platform.png' );
+        game.load.image( 'form2', 'https://raw.githubusercontent.com/photonstorm/phaser-coding-tips/master/issue-003/assets/ice-platform.png')
     },
 
 	create: function(){

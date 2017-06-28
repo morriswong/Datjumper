@@ -1,6 +1,10 @@
 var NUMBER_OF_PLATFORM = 20
 var background
 var health = 100
+var coins= 0
+var canSwipe = true
+var swipeDistance = 200
+var swipePowah = 1
 
 var coins = 0;
 
@@ -51,7 +55,7 @@ playgame.prototype = {
     // camera and platform tracking vars
     this.cameraYMin = 99999;
     this.platformYMin = 99999;
-    this.coinYmin = 99999;
+    this.coinYMin = 99999;
 
     // create platforms
     this.platformsCreate();
@@ -123,13 +127,13 @@ playgame.prototype = {
     }, this );
 
     //creating coins
-   //  this.coins.forEachAlive( function( elem ) {
-   //      this.coinYMin = Math.min( this.coinYMin, elem.y );
-   //      if( elem.y > this.camera.y + this.game.height ) {
-   //          elem.kill();
-   //          this.coinsCreateOne(this.rnd.integerInRange(0,this.world.width -70), this.rnd.integerInRange(this.coinYMin - 100, this.coinYMin - 200), 1 );
-   //      }
-   // }, this );
+    this.coins.forEachAlive( function( elem ) {
+        this.coinYMin = Math.min( this.coinYMin, elem.y );
+        if( elem.y > this.camera.y + this.game.height ) {
+            elem.kill();
+            this.coinsCreateOne(this.rnd.integerInRange(0,this.world.width -70), this.rnd.integerInRange(this.coinYMin - 100, this.coinYMin - 200), 2 );
+        }
+   }, this );
 
     //Coin killer
     this.physics.arcade.overlap(this.hero, this.coins, this.onHeroVsCoin, null, this);
@@ -159,9 +163,9 @@ playgame.prototype = {
     // coins basic setup
     this.coins = this.add.group();
     this.coins.enableBody = true;
-    this.coins.createMultiple( 2000, 'coin' );
+    this.coins.createMultiple( 21, 'coin' );
     // create a batch of coins
-    for( var i = 0; i <= 1999; i++ ) {
+    for( var i = 0; i <= 20; i++ ) {
         this.coinsCreateOne( this.rnd.integerInRange( 0, this.world.width - 50 ), this.world.height - 100*i, 2);
     }
   },
@@ -189,6 +193,7 @@ playgame.prototype = {
            health += 4;
        }
        this.myHealthBar.setPercent(health);
+       coins += 1;
        coin.kill();
        coins += 1
     },
@@ -285,6 +290,21 @@ playgame.prototype = {
         this.hero.loadTexture('heroDown')
     } else {
         this.hero.loadTexture('heroUp')
+    }
+    //Swipe special movement
+    if(canSwipe == true){
+        if(Phaser.Point.distance(game.input.activePointer.positionDown,
+            game.input.activePointer.positionUp) > swipeDistance){
+                if(this.hero.body.velocity.y > 0){
+                this.hero.body.velocity.y = -(600 + 200*swipePowah);}
+                else{
+                this.hero.body.velocity.y -= (600 + 200*swipePowah);
+                }
+                canSwipe = false;
+                setTimeout(function(){
+        canSwipe = true; //Enables swipe again
+    }, (21000 - 1000*swipePowah)); //1 second less of wait for each point in swipePowah!
+        }
     }
 
     // wrap world coordinated so that you can warp from left to right and right to left

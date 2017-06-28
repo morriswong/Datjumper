@@ -273,15 +273,15 @@ playgame.prototype = {
 
   heroMove: function() {
     // handle the left and right movement of the hero
-    if( this.cursor.left.isDown ) {
-      this.hero.body.velocity.x = -400;
-      this.hero.scale.setTo(-0.2, 0.2);
-    } else if( this.cursor.right.isDown ) {
-      this.hero.body.velocity.x = 400;
-      this.hero.scale.setTo(0.2, 0.2);
-    } else {
-      this.hero.body.velocity.x = 0;
-    }
+    // if( this.cursor.left.isDown ) {
+    //   this.hero.body.velocity.x = -400;
+    //   this.hero.scale.setTo(-0.2, 0.2);
+    // } else if( this.cursor.right.isDown ) {
+    //   this.hero.body.velocity.x = 400;
+    //   this.hero.scale.setTo(0.2, 0.2);
+    // } else {
+    //   this.hero.body.velocity.x = 0;
+    // }
 
     if (this.hero.body.velocity.y >= 0){
         this.hero.loadTexture('heroDown')

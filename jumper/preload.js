@@ -9,7 +9,6 @@ preload.prototype = {
         game.load.image("background", "assets/sprites/backgrounds1.png");  //preload background iamge for titlescreen
         game.load.image("title", "assets/sprites/jump2.png");  //preload image for titlescreen
         game.load.image("playbutton", "assets/sprites/playbutton2.png"); //preload image for titlescreen
-        //game.load.image("backgrounds", "assets/sprites/backgrounds1.png"); //preload background for playgame
         game.load.image("backgrounds2", "assets/sprites/backgrounds2.png"); //preload background for game over
         game.load.image("replay", "assets/sprites/replay5.png"); //preload replay button
         game.load.image("separator", "assets/sprites/separator.png");
@@ -21,15 +20,15 @@ preload.prototype = {
         game.load.image( 'pixel', 'https://raw.githubusercontent.com/photonstorm/phaser-coding-tips/master/issue-003/assets/platform.png' );
         game.load.image( 'form2', 'https://raw.githubusercontent.com/photonstorm/phaser-coding-tips/master/issue-003/assets/ice-platform.png')
 
-        game.load.audio('sfxdouble', 'assets/audio/doubleJump.wav')
-        game.load.audio('sfxgameplay', 'assets/audio/gameplay1.wav')
-        game.load.audio('sfxcoin', 'assets/audio/coin.wav');
-        game.load.audio('sfxdouble', 'assets/audio/doubleJump.wav');
-
         //Gameover Screen
         game.load.image( 'increaseHealth', 'assets/sprites/health3.png' );
         game.load.image( 'jumpHigher', 'assets/sprites/jumpHigher3.png' );
         game.load.image( 'grow', 'assets/sprites/grow4.png' );
+
+        game.load.audio('sfxdouble', 'assets/audio/doubleJump.mp3')
+        game.load.audio('sfxgameplay', 'assets/audio/gameplay1.mp3')
+        game.load.audio('sfxcoin', 'assets/audio/coin.mp3');
+        game.load.audio('sfxdouble', 'assets/audio/doubleJump.mp3');
     },
 
 	create: function(){

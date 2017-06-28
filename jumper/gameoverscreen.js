@@ -7,15 +7,14 @@ create: function(){
 	var titleBG = game.add.tileSprite(0, 0, game.width, game.height, "backgrounds2");
 	//titleBG.tint = 0xFFFFFF;
 
-
-//Display for scores
+    //Display for scores
 	var scoreTitle = game.add.bitmapText(game.width/8, 20 , "font", "score", 60);
 	var scoreDisplay = game.add.bitmapText(game.width/7+15, 70 , "font", score.toString(), 60);
 
 	scoreTitle.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
 	scoreDisplay.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
 
-//Display for Jumps
+    //Display for Jumps
 	var coinsTitle = game.add.bitmapText(420, 20 , "font", "coins", 60);
 	var coinsDisplay = game.add.bitmapText(487.5, 70 , "font", coins.toString(), 60);
 
@@ -43,7 +42,6 @@ create: function(){
 	},
 
 	startGame: function(){
-		//coins = 0;
 		game.state.start("PlayGame");
 	}
 }

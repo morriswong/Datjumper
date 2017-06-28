@@ -37,8 +37,7 @@ playgame.prototype = {
         double: this.game.add.audio('sfxdouble'),
         gameplay: this.game.add.audio('sfxgameplay')
     };
-    this.sfx.gameplay.play();
-        // background color
+    // background color
     this.stage.backgroundColor = '#6bf';
     background = game.add.tileSprite(0, 0, game.width, game.height, "background");
     this.world.sendToBack(background);
@@ -217,19 +216,19 @@ playgame.prototype = {
     // this is a helper function since writing all of this out can get verbose elsewhere
     var platform = this.platforms.getFirstDead();
     platform.reset( x, y );
-    platform.scale.x = 1.4;
+    platform.scale.x = 0.5;
     platform.scale.y = 0.5;
     platform.body.immovable = true;
 
     if (game.rnd.between(0, 0.5)!= 0){
         platform.loadTexture('form2', 0)
         platform.kind = "double";
-        platform.scale.x = 1.6;
-        platform.scale.y = 1;
+        platform.scale.x = 0.5;
+        platform.scale.y = 0.5;
     } else {
         platform.kind = "normal";
         platform.loadTexture('pixel', 0)
-        platform.scale.x = 1.4;
+        platform.scale.x = 0.5;
         platform.scale.y = 0.5;
     }
     return platform;
@@ -273,15 +272,15 @@ playgame.prototype = {
 
   heroMove: function() {
     // handle the left and right movement of the hero
-    // if( this.cursor.left.isDown ) {
-    //   this.hero.body.velocity.x = -400;
-    //   this.hero.scale.setTo(-0.2, 0.2);
-    // } else if( this.cursor.right.isDown ) {
-    //   this.hero.body.velocity.x = 400;
-    //   this.hero.scale.setTo(0.2, 0.2);
-    // } else {
-    //   this.hero.body.velocity.x = 0;
-    // }
+    if( this.cursor.left.isDown ) {
+      this.hero.body.velocity.x = -400;
+      this.hero.scale.setTo(-0.2, 0.2);
+    } else if( this.cursor.right.isDown ) {
+      this.hero.body.velocity.x = 400;
+      this.hero.scale.setTo(0.2, 0.2);
+    } else {
+      this.hero.body.velocity.x = 0;
+    }
 
     if (this.hero.body.velocity.y >= 0){
         this.hero.loadTexture('heroDown')

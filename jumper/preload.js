@@ -17,8 +17,8 @@ preload.prototype = {
         game.load.image( 'heroUp', 'assets/sprites/frame_right.png' );
         game.load.image( 'heroDown', 'assets/sprites/frameFall.png' );
         game.load.spritesheet('coin', 'assets/sprites/coin_spritesheet.png', 22, 22);
-        game.load.image( 'pixel', 'https://raw.githubusercontent.com/photonstorm/phaser-coding-tips/master/issue-003/assets/platform.png' );
-        game.load.image( 'form2', 'https://raw.githubusercontent.com/photonstorm/phaser-coding-tips/master/issue-003/assets/ice-platform.png')
+        game.load.image( 'pixel', 'assets/sprites/ground_grass.png' );
+        game.load.image( 'form2', 'assets/sprites/spring.png')
 
         //Gameover Screen
         game.load.image( 'increaseHealth', 'assets/sprites/health3.png' );

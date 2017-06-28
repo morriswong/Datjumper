@@ -25,7 +25,7 @@ playgame.prototype = {
         isFixedToCamera: true
     };
     this.myHealthBar = new HealthBar(this.game, barConfig);
-    this.world.bringToTop(this.myHealthBar);
+    this.world.bringToTop(this.myHealthBar); //Not working
     this.sfx = {
         coin: this.game.add.audio('sfxcoin'),
         double: this.game.add.audio('sfxdouble')
@@ -132,6 +132,8 @@ playgame.prototype = {
     // hero collisions and movement
     this.physics.arcade.collide( this.hero, this.platforms, this.findPlatformType, null, this );
     this.heroMove();
+
+    console.log(parseInt(this.hero.body.y - 830) * -1);
   },
 
   shutdown: function() {

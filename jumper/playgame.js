@@ -2,6 +2,8 @@ var NUMBER_OF_PLATFORM = 20
 var background
 var health = 100
 
+var coins = 0;
+
 var playgame = function(game){};
 
 playgame.prototype = {
@@ -28,11 +30,13 @@ playgame.prototype = {
     this.world.bringToTop(this.myHealthBar); //Not working
     this.sfx = {
         coin: this.game.add.audio('sfxcoin'),
-        double: this.game.add.audio('sfxdouble')
+        double: this.game.add.audio('sfxdouble'),
+        gameplay: this.game.add.audio('sfxgameplay')
     };
+    this.sfx.gameplay.play();
         // background color
     this.stage.backgroundColor = '#6bf';
-    background = game.add.tileSprite(0, 0, game.width, game.height, "background3");
+    background = game.add.tileSprite(0, 0, game.width, game.height, "background");
     this.world.sendToBack(background);
 
     // scaling
@@ -95,8 +99,8 @@ playgame.prototype = {
 
   update: function() {
 
-    // backgrounds.tilePosition.y += 0.35
-    backgrounds.position.y = this.camera.y;
+    background.tilePosition.y += 0.35
+    background.position.y = this.camera.y;
     // this is where the main magic happens
     // the y offset and the height of the world are adjusted
     // to match the highest point the hero has reached
@@ -135,7 +139,8 @@ playgame.prototype = {
     this.physics.arcade.collide( this.hero, this.platforms, this.findPlatformType, null, this );
     this.heroMove();
 
-    console.log(parseInt(this.hero.body.y - 830) * -1);
+    //console.log(parseInt(this.hero.body.y - 830) * -1);
+    score = parseInt(this.hero.body.y - 830) * -1;
   },
 
   shutdown: function() {
@@ -174,6 +179,7 @@ playgame.prototype = {
     return coin;
    },
 
+
    onHeroVsCoin: function(hero, coin) {
        if (this.hero.body.touching.down){
            this.hero.body.velocity.y = -1200;
@@ -184,7 +190,9 @@ playgame.prototype = {
        }
        this.myHealthBar.setPercent(health);
        coin.kill();
+       coins += 1
     },
+
 
 // PLATFROMS
 

@@ -35,9 +35,9 @@ playgame.prototype = {
     this.sfx = {
         coin: this.game.add.audio('sfxcoin'),
         double: this.game.add.audio('sfxdouble'),
-        gameplay: this.game.add.audio('sfxgameplay')
+
     };
-    this.sfx.gameplay.play();
+    
         // background color
     this.stage.backgroundColor = '#6bf';
     background = game.add.tileSprite(0, 0, game.width, game.height, "background");

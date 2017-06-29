@@ -5,8 +5,9 @@ var coins= 0
 var canSwipe = true
 var swipeDistance = 200
 var swipePowah = 1
-
 var coins = 0;
+
+var md = new MobileDetect(window.navigator.userAgent);
 
 var playgame = function(game){};
 
@@ -37,6 +38,7 @@ playgame.prototype = {
         double: this.game.add.audio('sfxdouble'),
         gameplay: this.game.add.audio('sfxgameplay')
     };
+
     // background color
     this.stage.backgroundColor = '#6bf';
     background = game.add.tileSprite(0, 0, game.width, game.height, "background");
@@ -67,36 +69,12 @@ playgame.prototype = {
     this.cursor = this.input.keyboard.createCursorKeys();
 
     if (window.DeviceOrientationEvent) {
+        var velocity = this.hero.body.velocity;
+        var heroTiltMove = this.heroTiltMove;
+        var self = this;
         window.addEventListener("deviceorientation", function () {
-            processGyro(event.alpha, event.beta, event.gamma);
+            heroTiltMove(event.alpha, event.beta, event.gamma, velocity, self);
         }, true);
-    }
-
-    var self = this
-    var velocity = this.hero.body.velocity;
-
-    function processGyro(alpha,beta,gamma){
-        if (gamma > 0 && self.hero){
-            if (velocity.x >= 400){
-                velocity.x = velocity.x
-            }
-            else if (gamma > 10) {
-                velocity.x += (gamma * 1.5);}
-            else {
-                velocity.x += gamma;
-            }
-            self.hero.scale.setTo(0.2, 0.2);
-        }else if (gamma < 0 && self.hero) {
-            if (velocity.x <= -400){
-                velocity.x = velocity.x
-            }
-            else if (gamma < -10) {
-                velocity.x += (gamma * 1.5);}
-            else {
-                velocity.x += gamma;
-            }
-            self.hero.scale.setTo(-0.2, 0.2);
-        }
     }
   },
 
@@ -270,16 +248,42 @@ playgame.prototype = {
     this.hero.body.checkCollision.right = false;
   },
 
+  heroTiltMove: function(alpha,beta,gamma, velocity, self){
+      if (gamma > 0 && self.hero){
+          if (velocity.x >= 400){
+              velocity.x = velocity.x
+          }
+          else if (gamma > 10) {
+              velocity.x += (gamma * 1.5);}
+          else {
+              velocity.x += gamma;
+          }
+          self.hero.scale.setTo(0.2, 0.2);
+      }else if (gamma < 0 && self.hero) {
+          if (velocity.x <= -400){
+              velocity.x = velocity.x
+          }
+          else if (gamma < -10) {
+              velocity.x += (gamma * 1.5);}
+          else {
+              velocity.x += gamma;
+          }
+          self.hero.scale.setTo(-0.2, 0.2);
+      }
+  },
+
   heroMove: function() {
     // handle the left and right movement of the hero
-    if( this.cursor.left.isDown ) {
-      this.hero.body.velocity.x = -400;
-      this.hero.scale.setTo(-0.2, 0.2);
-    } else if( this.cursor.right.isDown ) {
-      this.hero.body.velocity.x = 400;
-      this.hero.scale.setTo(0.2, 0.2);
-    } else {
-      this.hero.body.velocity.x = 0;
+    if (!md.mobile()){
+        if( this.cursor.left.isDown ) {
+          this.hero.body.velocity.x = -400;
+          this.hero.scale.setTo(-0.2, 0.2);
+        } else if( this.cursor.right.isDown ) {
+          this.hero.body.velocity.x = 400;
+          this.hero.scale.setTo(0.2, 0.2);
+        } else {
+          this.hero.body.velocity.x = 0;
+        }
     }
 
     if (this.hero.body.velocity.y >= 0){

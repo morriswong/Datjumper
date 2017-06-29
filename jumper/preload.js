@@ -9,7 +9,6 @@ preload.prototype = {
         game.load.image("background", "assets/sprites/backgrounds1.png");  //preload background iamge for titlescreen
         game.load.image("title", "assets/sprites/jump2.png");  //preload image for titlescreen
         game.load.image("playbutton", "assets/sprites/playbutton2.png"); //preload image for titlescreen
-        //game.load.image("backgrounds", "assets/sprites/backgrounds1.png"); //preload background for playgame
         game.load.image("backgrounds2", "assets/sprites/backgrounds2.png"); //preload background for game over
         game.load.image("replay", "assets/sprites/replay5.png"); //preload replay button
         game.load.image("separator", "assets/sprites/separator.png");
@@ -18,15 +17,20 @@ preload.prototype = {
         game.load.image( 'heroUp', 'assets/sprites/frame_right.png' );
         game.load.image( 'heroDown', 'assets/sprites/frameFall.png' );
         game.load.spritesheet('coin', 'assets/sprites/coin_spritesheet.png', 22, 22);
-        game.load.audio('sfxcoin', 'assets/audio/coin.wav');
-        game.load.audio('sfxdouble', 'assets/audio/doubleJump.wav')
-        game.load.audio('sfxgameplay', 'assets/audio/gameplay1.wav')
-        game.load.image( 'pixel', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/836/pixel_1.png' );
+
+        game.load.image( 'pixel', 'assets/sprites/ground_grass.png' );
+        game.load.image( 'form2', 'assets/sprites/spring.png')
 
         //Gameover Screen
         game.load.image( 'increaseHealth', 'assets/sprites/health3.png' );
         game.load.image( 'jumpHigher', 'assets/sprites/jumpHigher3.png' );
         game.load.image( 'grow', 'assets/sprites/grow4.png' );
+        game.load.image( 'coins', 'assets/sprites/coins1.png' );
+
+        game.load.audio('sfxdouble', 'assets/audio/doubleJump.mp3')
+        game.load.audio('sfxgameplay', 'assets/audio/gameplay1.mp3')
+        game.load.audio('sfxcoin', 'assets/audio/coin.mp3');
+        game.load.audio('sfxdouble', 'assets/audio/doubleJump.mp3');
     },
 
 	create: function(){

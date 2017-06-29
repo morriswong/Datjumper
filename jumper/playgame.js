@@ -8,11 +8,21 @@ var swipePowah = 1
 
 var coins = 0;
 
+var coinsDisplay;
+
 var playgame = function(game){};
 
 playgame.prototype = {
 
   create: function() {
+
+   coinsTitle = game.add.bitmapText(520, 20, "font", "coins", 30);
+   coinsTitle.fixedToCamera = true
+   coinsTitle.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
+
+   this.coinsDisplay = game.add.bitmapText(550, 50, "font", coins.toString(), 30);
+   this.coinsDisplay.fixedToCamera = true;
+   this.coinsDisplay.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
 
     //Setting up health bar
     var barConfig = {
@@ -37,8 +47,7 @@ playgame.prototype = {
         double: this.game.add.audio('sfxdouble'),
 
     };
-    
-        // background color
+    // background color
     this.stage.backgroundColor = '#6bf';
     background = game.add.tileSprite(0, 0, game.width, game.height, "background");
     this.world.sendToBack(background);
@@ -102,6 +111,7 @@ playgame.prototype = {
   },
 
   update: function() {
+    this.coinsDisplay.text = coins;
 
     background.tilePosition.y += 0.35
     background.position.y = this.camera.y;
@@ -127,7 +137,7 @@ playgame.prototype = {
     }, this );
 
     //creating coins
-    this.coins.forEachAlive( function( elem ) {
+    this.coins.forEach( function( elem ) {
         this.coinYMin = Math.min( this.coinYMin, elem.y );
         if( elem.y > this.camera.y + this.game.height ) {
             elem.kill();
@@ -142,8 +152,6 @@ playgame.prototype = {
     // hero collisions and movement
     this.physics.arcade.collide( this.hero, this.platforms, this.findPlatformType, null, this );
     this.heroMove();
-
-    //console.log(parseInt(this.hero.body.y - 830) * -1);
     score = parseInt(this.hero.body.y - 830) * -1;
   },
 
@@ -156,6 +164,10 @@ playgame.prototype = {
     this.platforms.destroy();
     this.platforms = null;
   },
+
+  // liveUpdates: function () {
+  //     var coinsDisplay.text
+  // },
 
 // COINS
 
@@ -188,14 +200,13 @@ playgame.prototype = {
        if (this.hero.body.touching.down){
            this.hero.body.velocity.y = -1200;
        }
-       this.sfx.coin.play();
        if(health < 100){
            health += 4;
        }
+       this.sfx.coin.play();
        this.myHealthBar.setPercent(health);
        coins += 1;
-       coin.kill();
-       coins += 1
+       coin.kill()
     },
 
 
@@ -205,7 +216,6 @@ playgame.prototype = {
     // platform basic setup
     this.platforms = this.add.group();
     this.platforms.enableBody = true;
-    // this.physics.p2.enable( this.platforms, false);
     this.platforms.createMultiple( NUMBER_OF_PLATFORM, 'pixel' );
 
     // create the base platform, with buffer on either side so that the hero doesn't fall through
@@ -220,19 +230,20 @@ playgame.prototype = {
     // this is a helper function since writing all of this out can get verbose elsewhere
     var platform = this.platforms.getFirstDead();
     platform.reset( x, y );
-    platform.scale.x = width;
-    platform.scale.y = 16;
+    platform.scale.x = 0.5;
+    platform.scale.y = 0.5;
     platform.body.immovable = true;
 
-    if (game.rnd.between(0, 0.5)!=0){
+    if (game.rnd.between(0, 0.5)!= 0){
+        platform.loadTexture('form2', 0)
         platform.kind = "double";
-        platform.tint =  0xF6FA05;
-        platform.scale.y = 32;
-        platform.overlap = function(){
-            kill.platform;
-        };
+        platform.scale.x = 0.5;
+        platform.scale.y = 0.5;
     } else {
         platform.kind = "normal";
+        platform.loadTexture('pixel', 0)
+        platform.scale.x = 0.5;
+        platform.scale.y = 0.5;
     }
     return platform;
   },
@@ -251,7 +262,6 @@ playgame.prototype = {
       } else {
           this.hero.body.velocity.y = -1100;
       }
-
   },
 
   heroCreate: function() {

@@ -7,7 +7,7 @@ var swipeDistance = 200
 var swipePowah = 1
 var coins = 0;
 
-var md = new MobileDetect(window.navigator.userAgent);
+var deviceCheck = new MobileDetect(window.navigator.userAgent);
 
 var playgame = function(game){};
 
@@ -31,8 +31,6 @@ playgame.prototype = {
         flipped: false,
         isFixedToCamera: true
     };
-    this.myHealthBar = new HealthBar(this.game, barConfig);
-    this.world.bringToTop(this.myHealthBar); //Not working
     this.sfx = {
         coin: this.game.add.audio('sfxcoin'),
         double: this.game.add.audio('sfxdouble'),
@@ -42,7 +40,6 @@ playgame.prototype = {
     // background color
     this.stage.backgroundColor = '#6bf';
     background = game.add.tileSprite(0, 0, game.width, game.height, "background");
-    this.world.sendToBack(background);
 
     // scaling
     this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -61,6 +58,9 @@ playgame.prototype = {
     // create platforms
     this.platformsCreate();
     this.coinsCreate();
+
+    //HealthBar
+    this.myHealthBar = new HealthBar(this.game, barConfig);
 
     // create hero
     this.heroCreate();
@@ -82,6 +82,7 @@ playgame.prototype = {
 
     background.tilePosition.y += 0.35
     background.position.y = this.camera.y;
+    this.world.bringToTop(this.myHealthBar);
     // this is where the main magic happens
     // the y offset and the height of the world are adjusted
     // to match the highest point the hero has reached
@@ -114,7 +115,6 @@ playgame.prototype = {
 
     //Coin killer
     this.physics.arcade.overlap(this.hero, this.coins, this.onHeroVsCoin, null, this);
-    // this.physics.arcade.collide(this.hero, this.coins, this.findPlatformType, null, this);
 
     // hero collisions and movement
     this.physics.arcade.collide( this.hero, this.platforms, this.findPlatformType, null, this );
@@ -157,7 +157,6 @@ playgame.prototype = {
     coin.animations.play('rotate');
     return coin;
    },
-
 
    onHeroVsCoin: function(hero, coin) {
        if (this.hero.body.touching.down){
@@ -253,8 +252,8 @@ playgame.prototype = {
           if (velocity.x >= 400){
               velocity.x = velocity.x
           }
-          else if (gamma > 10) {
-              velocity.x += (gamma * 1.5);}
+        //   else if (gamma > 10) {
+        //       velocity.x += (gamma * 1.5);}
           else {
               velocity.x += gamma;
           }
@@ -263,8 +262,8 @@ playgame.prototype = {
           if (velocity.x <= -400){
               velocity.x = velocity.x
           }
-          else if (gamma < -10) {
-              velocity.x += (gamma * 1.5);}
+        //   else if (gamma < -10) {
+        //       velocity.x += (gamma * 1.5);}
           else {
               velocity.x += gamma;
           }
@@ -274,7 +273,7 @@ playgame.prototype = {
 
   heroMove: function() {
     // handle the left and right movement of the hero
-    if (!md.mobile()){
+    if (!deviceCheck.mobile()){
         if( this.cursor.left.isDown ) {
           this.hero.body.velocity.x = -400;
           this.hero.scale.setTo(-0.2, 0.2);
@@ -295,15 +294,15 @@ playgame.prototype = {
     if(canSwipe == true){
         if(Phaser.Point.distance(game.input.activePointer.positionDown,
             game.input.activePointer.positionUp) > swipeDistance){
-                if(this.hero.body.velocity.y > 0){
-                this.hero.body.velocity.y = -(600 + 200*swipePowah);}
-                else{
+            if(this.hero.body.velocity.y > 0){
+                this.hero.body.velocity.y = -(600 + 200*swipePowah);
+            }else{
                 this.hero.body.velocity.y -= (600 + 200*swipePowah);
-                }
-                canSwipe = false;
-                setTimeout(function(){
-        canSwipe = true; //Enables swipe again
-    }, (21000 - 1000*swipePowah)); //1 second less of wait for each point in swipePowah!
+            }
+            canSwipe = false;
+            setTimeout(function(){
+                canSwipe = true; //Enables swipe again
+            }, (21000 - 1000*swipePowah)); //1 second less of wait for each point in swipePowah!
         }
     }
 

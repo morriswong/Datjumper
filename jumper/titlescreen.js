@@ -9,8 +9,6 @@ titlescreen.prototype = {
         gameplay.onLoop.add(function(){
             gameplay.play();
         }, this);
-        //Set Interval loop
-        // gameplay.loopFull(0.8);
 
         this.scale.pageAlignHorizontally = true;
 		this.scale.pageAlignVertically = true;

@@ -1,11 +1,19 @@
 var NUMBER_OF_PLATFORM = 20
 var background
+
 var health = 100
-var score= 0
+var maxHealth = 200
+
+var coins = 0
+var score = 0
 var canSwipe = true
 var swipeDistance = 200
 var swipePowah = 1
-var coins = 0;
+
+var heroSize = 0.2
+
+var doubleDecrease = 15
+var singleDecrease = 8
 
 var deviceCheck = new MobileDetect(window.navigator.userAgent);
 
@@ -37,7 +45,8 @@ playgame.prototype = {
     this.sfx = {
         coin: this.game.add.audio('sfxcoin'),
         double: this.game.add.audio('sfxdouble'),
-
+        gameplay: this.game.add.audio('sfxgameplay'),
+        die: this.game.add.audio('sfxdie')
     };
 
     // background color
@@ -70,6 +79,16 @@ playgame.prototype = {
 
     // cursor controls
     this.cursor = this.input.keyboard.createCursorKeys();
+
+    var increaseHealth = game.add.button(105, 850, "increaseHealth", this.startGame);
+    increaseHealth.fixedToCamera = true
+    increaseHealth.scale.setTo(0.5, 0.5)
+    var jumpHigher = game.add.button(290, 865, "jumpHigher", this.startGame);
+    jumpHigher.fixedToCamera = true
+    jumpHigher.scale.setTo(0.5, 0.5)
+    var grow = game.add.button(475, 855, "grow", this.startGame);
+    grow.fixedToCamera = true
+    grow.scale.setTo(0.5, 0.5)
 
     if (window.DeviceOrientationEvent) {
         var velocity = this.hero.body.velocity;
@@ -235,12 +254,12 @@ playgame.prototype = {
   findPlatformType: function(hero, platform){
       if (platform.kind == "double" && this.hero.body.touching.down){
           this.hero.body.velocity.y = -2000;
-          health -= 15;
+          health -= doubleDecrease;
           this.myHealthBar.setPercent(health);
           this.sfx.double.play();
       } else if (this.hero.body.touching.down){
           this.hero.body.velocity.y = -1000;
-          health -= 8;
+          health -= singleDecrease;
           this.myHealthBar.setPercent(health);
       } else {
           this.hero.body.velocity.y = -1100;
@@ -250,7 +269,7 @@ playgame.prototype = {
   heroCreate: function() {
     // basic hero setup
     this.hero = game.add.sprite( this.world.centerX, this.world.height - 36, 'heroUp' );
-    this.hero.scale.setTo(-0.2, 0.2);
+    this.hero.scale.setTo(-heroSize, heroSize);
     this.hero.anchor.set( 0.5 );
 
     // track where the hero started and how much the distance has changed from that point
@@ -267,27 +286,17 @@ playgame.prototype = {
     this.hero.body.checkCollision.right = false;
   },
 
+  buttonPressed: function(){
+      console.log("button pressed");
+  },
+
   heroTiltMove: function(alpha,beta,gamma, velocity, self){
       if (gamma > 0 && self.hero){
-          if (velocity.x >= 400){
-              velocity.x = velocity.x
-          }
-        //   else if (gamma > 10) {
-        //       velocity.x += (gamma * 1.5);}
-          else {
-              velocity.x += gamma;
-          }
-          self.hero.scale.setTo(0.2, 0.2);
+          velocity.x = gamma * 15
+          self.hero.scale.setTo(heroSize, heroSize);
       }else if (gamma < 0 && self.hero) {
-          if (velocity.x <= -400){
-              velocity.x = velocity.x
-          }
-        //   else if (gamma < -10) {
-        //       velocity.x += (gamma * 1.5);}
-          else {
-              velocity.x += gamma;
-          }
-          self.hero.scale.setTo(-0.2, 0.2);
+          velocity.x = gamma * 15
+          self.hero.scale.setTo(-heroSize, heroSize);
       }
   },
 
@@ -296,10 +305,10 @@ playgame.prototype = {
     if (!deviceCheck.mobile()){
         if( this.cursor.left.isDown ) {
           this.hero.body.velocity.x = -400;
-          this.hero.scale.setTo(-0.2, 0.2);
+          this.hero.scale.setTo(-heroSize, heroSize);
         } else if( this.cursor.right.isDown ) {
           this.hero.body.velocity.x = 400;
-          this.hero.scale.setTo(0.2, 0.2);
+          this.hero.scale.setTo(heroSize, heroSize);
         } else {
           this.hero.body.velocity.x = 0;
         }
@@ -335,12 +344,14 @@ playgame.prototype = {
     //0 Health gameover
     if(health < 1 && this.hero.alive ) {
         health = 100;
+        this.sfx.die.play();
         this.state.start( 'GameOverScreen' );
     }
 
     // if the hero falls below the camera view, gameover
     if( this.hero.y > this.cameraYMin + this.game.height && this.hero.alive ) {
       health = 100
+      this.sfx.die.play();
       this.state.start( 'GameOverScreen' );
     }
   }

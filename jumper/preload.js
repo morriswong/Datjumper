@@ -30,7 +30,7 @@ preload.prototype = {
         game.load.audio('sfxdouble', 'assets/audio/doubleJump.mp3')
         game.load.audio('sfxgameplay', 'assets/audio/gameplay1.mp3')
         game.load.audio('sfxcoin', 'assets/audio/coin.mp3');
-        game.load.audio('sfxdouble', 'assets/audio/doubleJump.mp3');
+        game.load.audio('sfxdie', 'assets/audio/die.mp3');
     },
 
 	create: function(){

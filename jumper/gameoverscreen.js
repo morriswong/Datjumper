@@ -20,7 +20,6 @@ gameoverscreen.prototype = {
 
 		var titleBG = game.add.tileSprite(0, 0, game.width, game.height, "backgrounds2");
 
-
 	    //Display for scores
 		var scoreTitle = game.add.bitmapText(game.width/8, 20 , "font", "score", 60);
 		var scoreDisplay = game.add.bitmapText(game.width/7+15, 70 , "font", score.toString(), 60);

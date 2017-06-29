@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
 var NUMBER_OF_PLATFORM = 20
 var background
 
@@ -24,23 +20,11 @@ var deviceCheck = new MobileDetect(window.navigator.userAgent);
 var coinsDisplay
 var scoreDisplay
 
->>>>>>> d70f086c5ea962cfd2c46987be280cd3318cce03
->>>>>>> 816418a35e123431d5a4266ea567e3b1d6fb152e
 var playgame = function(game){};
 
 playgame.prototype = {
 
-<<<<<<< HEAD
   create: function() {
-=======
-<<<<<<< HEAD
-
-  create: function() {
-=======
-  create: function() {
-
->>>>>>> d70f086c5ea962cfd2c46987be280cd3318cce03
->>>>>>> 816418a35e123431d5a4266ea567e3b1d6fb152e
     //Setting up health bar
     var barConfig = {
         width: 450,

@@ -3,10 +3,12 @@ var titlescreen = function(game){};
 
 titlescreen.prototype = {
 	create: function(){
-        this.sfx = {
-            gameplay: this.game.add.audio('sfxgameplay')
-        };
-	    this.sfx.gameplay.play();
+        gameplay = game.add.audio('sfxgameplay')
+        gameplay.loop = true;
+        gameplay.play();
+        gameplay.onLoop.add(function(){
+            gameplay.play();
+        }, this);
 
         this.scale.pageAlignHorizontally = true;
 		this.scale.pageAlignVertically = true;

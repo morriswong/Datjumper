@@ -5,10 +5,11 @@ var coins= 0
 var canSwipe = true
 var swipeDistance = 200
 var swipePowah = 1
-
 var coins = 0;
 
-var coinsDisplay;
+var deviceCheck = new MobileDetect(window.navigator.userAgent);
+
+var coinsDisplay
 
 var playgame = function(game){};
 
@@ -40,17 +41,15 @@ playgame.prototype = {
         flipped: false,
         isFixedToCamera: true
     };
-    this.myHealthBar = new HealthBar(this.game, barConfig);
-    this.world.bringToTop(this.myHealthBar); //Not working
     this.sfx = {
         coin: this.game.add.audio('sfxcoin'),
         double: this.game.add.audio('sfxdouble'),
 
     };
+
     // background color
     this.stage.backgroundColor = '#6bf';
     background = game.add.tileSprite(0, 0, game.width, game.height, "background");
-    this.world.sendToBack(background);
 
     // scaling
     this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -70,6 +69,9 @@ playgame.prototype = {
     this.platformsCreate();
     this.coinsCreate();
 
+    //HealthBar
+    this.myHealthBar = new HealthBar(this.game, barConfig);
+
     // create hero
     this.heroCreate();
 
@@ -77,36 +79,12 @@ playgame.prototype = {
     this.cursor = this.input.keyboard.createCursorKeys();
 
     if (window.DeviceOrientationEvent) {
+        var velocity = this.hero.body.velocity;
+        var heroTiltMove = this.heroTiltMove;
+        var self = this;
         window.addEventListener("deviceorientation", function () {
-            processGyro(event.alpha, event.beta, event.gamma);
+            heroTiltMove(event.alpha, event.beta, event.gamma, velocity, self);
         }, true);
-    }
-
-    var self = this
-    var velocity = this.hero.body.velocity;
-
-    function processGyro(alpha,beta,gamma){
-        if (gamma > 0 && self.hero){
-            if (velocity.x >= 400){
-                velocity.x = velocity.x
-            }
-            else if (gamma > 10) {
-                velocity.x += (gamma * 1.5);}
-            else {
-                velocity.x += gamma;
-            }
-            self.hero.scale.setTo(0.2, 0.2);
-        }else if (gamma < 0 && self.hero) {
-            if (velocity.x <= -400){
-                velocity.x = velocity.x
-            }
-            else if (gamma < -10) {
-                velocity.x += (gamma * 1.5);}
-            else {
-                velocity.x += gamma;
-            }
-            self.hero.scale.setTo(-0.2, 0.2);
-        }
     }
   },
 
@@ -115,6 +93,7 @@ playgame.prototype = {
 
     background.tilePosition.y += 0.35
     background.position.y = this.camera.y;
+    this.world.bringToTop(this.myHealthBar);
     // this is where the main magic happens
     // the y offset and the height of the world are adjusted
     // to match the highest point the hero has reached
@@ -147,7 +126,6 @@ playgame.prototype = {
 
     //Coin killer
     this.physics.arcade.overlap(this.hero, this.coins, this.onHeroVsCoin, null, this);
-    // this.physics.arcade.collide(this.hero, this.coins, this.findPlatformType, null, this);
 
     // hero collisions and movement
     this.physics.arcade.collide( this.hero, this.platforms, this.findPlatformType, null, this );
@@ -164,10 +142,6 @@ playgame.prototype = {
     this.platforms.destroy();
     this.platforms = null;
   },
-
-  // liveUpdates: function () {
-  //     var coinsDisplay.text
-  // },
 
 // COINS
 
@@ -194,7 +168,6 @@ playgame.prototype = {
     coin.animations.play('rotate');
     return coin;
    },
-
 
    onHeroVsCoin: function(hero, coin) {
        if (this.hero.body.touching.down){
@@ -284,16 +257,42 @@ playgame.prototype = {
     this.hero.body.checkCollision.right = false;
   },
 
+  heroTiltMove: function(alpha,beta,gamma, velocity, self){
+      if (gamma > 0 && self.hero){
+          if (velocity.x >= 400){
+              velocity.x = velocity.x
+          }
+        //   else if (gamma > 10) {
+        //       velocity.x += (gamma * 1.5);}
+          else {
+              velocity.x += gamma;
+          }
+          self.hero.scale.setTo(0.2, 0.2);
+      }else if (gamma < 0 && self.hero) {
+          if (velocity.x <= -400){
+              velocity.x = velocity.x
+          }
+        //   else if (gamma < -10) {
+        //       velocity.x += (gamma * 1.5);}
+          else {
+              velocity.x += gamma;
+          }
+          self.hero.scale.setTo(-0.2, 0.2);
+      }
+  },
+
   heroMove: function() {
     // handle the left and right movement of the hero
-    if( this.cursor.left.isDown ) {
-      this.hero.body.velocity.x = -400;
-      this.hero.scale.setTo(-0.2, 0.2);
-    } else if( this.cursor.right.isDown ) {
-      this.hero.body.velocity.x = 400;
-      this.hero.scale.setTo(0.2, 0.2);
-    } else {
-      this.hero.body.velocity.x = 0;
+    if (!deviceCheck.mobile()){
+        if( this.cursor.left.isDown ) {
+          this.hero.body.velocity.x = -400;
+          this.hero.scale.setTo(-0.2, 0.2);
+        } else if( this.cursor.right.isDown ) {
+          this.hero.body.velocity.x = 400;
+          this.hero.scale.setTo(0.2, 0.2);
+        } else {
+          this.hero.body.velocity.x = 0;
+        }
     }
 
     if (this.hero.body.velocity.y >= 0){
@@ -305,15 +304,15 @@ playgame.prototype = {
     if(canSwipe == true){
         if(Phaser.Point.distance(game.input.activePointer.positionDown,
             game.input.activePointer.positionUp) > swipeDistance){
-                if(this.hero.body.velocity.y > 0){
-                this.hero.body.velocity.y = -(600 + 200*swipePowah);}
-                else{
+            if(this.hero.body.velocity.y > 0){
+                this.hero.body.velocity.y = -(600 + 200*swipePowah);
+            }else{
                 this.hero.body.velocity.y -= (600 + 200*swipePowah);
-                }
-                canSwipe = false;
-                setTimeout(function(){
-        canSwipe = true; //Enables swipe again
-    }, (21000 - 1000*swipePowah)); //1 second less of wait for each point in swipePowah!
+            }
+            canSwipe = false;
+            setTimeout(function(){
+                canSwipe = true; //Enables swipe again
+            }, (21000 - 1000*swipePowah)); //1 second less of wait for each point in swipePowah!
         }
     }
 

@@ -21,9 +21,10 @@ create: function(){
 	coinsTitle.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
 	coinsDisplay.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
 
-	var playButton = game.add.button(game.width / 2, 880, "replay", this.startGame);
+	var playButton = game.add.button(game.width / 2, 860, "replay", this.startGame);
 	playButton.anchor.set(0.5);
 	playButton.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
+    playButton.scale.setTo(0.9, 1);
 
 	var increaseHealth = game.add.button(100, 300, "increaseHealth", this.startGame);
 	increaseHealth.anchor.set(0.5)

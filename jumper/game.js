@@ -7,9 +7,11 @@ var background
 var health = 100
 
 var gravity = 1500
+var velocityUp = -1500
 
 var coins= 0
 var coinsDisplay
+var score = 0
 
 var canSwipe = true
 var swipeDistance = 200
@@ -62,6 +64,20 @@ boot.prototype = {
 		game.scale.pageAlignVertically = true;
 		game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         game.scale.setScreenSize( true );
+        var myContext = window.addEventListener('touchstart', function() {
+
+            // create new buffer source for playback with an already
+            // loaded and decoded empty sound file
+            var source = myContext.createBufferSource();
+            source.buffer = myDecodedBuffer;
+
+            // connect to output (your speakers)
+            source.connect(myContext.destination);
+
+            // play the file
+            source.noteOn(0);
+
+        }, false);
 		game.state.start("Preload");
 
 	}

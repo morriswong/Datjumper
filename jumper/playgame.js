@@ -2,7 +2,6 @@ var playgame = function(game){};
 
 playgame.prototype = {
 
-
   create: function() {
     //Setting up health bar
     var barConfig = {
@@ -92,15 +91,6 @@ playgame.prototype = {
     this.mushroomCount.fixedToCamera = true;
     this.mushroomCount.tint = 0xFFFFFF;;
 
-    //Coins count
-    coinsTitle = game.add.bitmapText(520, 20, "font", "coins", 30);
-    coinsTitle.fixedToCamera = true
-    coinsTitle.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
-
-    this.coinsDisplay = game.add.bitmapText(550, 50, "font", coins.toString(), 30);
-    this.coinsDisplay.fixedToCamera = true;
-    this.coinsDisplay.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
-
     if (window.DeviceOrientationEvent) {
         var velocity = this.hero.body.velocity;
         var heroTiltMove = this.heroTiltMove;
@@ -109,10 +99,27 @@ playgame.prototype = {
             heroTiltMove(event.alpha, event.beta, event.gamma, velocity, self);
         }, true);
     }
+
+    scoreTitle = game.add.bitmapText(485, 20 , "font", "score", 24);
+    scoreTitle.fixedToCamera = true
+    scoreTitle.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
+
+    this.scoreDisplay = game.add.bitmapText(490, 45 , "font", score.toString(), 24);
+    this.scoreDisplay.fixedToCamera = true
+    this.scoreDisplay.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
+
+    coinsTitle = game.add.bitmapText(570, 20, "font", "coins", 24);
+    coinsTitle.fixedToCamera = true
+    coinsTitle.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
+
+    this.coinsDisplay = game.add.bitmapText(600, 45, "font", coins.toString(), 24);
+    this.coinsDisplay.fixedToCamera = true;
+    this.coinsDisplay.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
   },
 
   update: function() {
     this.coinsDisplay.text = coins;
+    this.scoreDisplay.text = score;
 
     background.tilePosition.y += 0.35
     background.position.y = this.camera.y;
@@ -218,7 +225,7 @@ playgame.prototype = {
     this.platformsCreateOne( -16, this.world.height - 16, this.world.width + 16 );
     // create a batch of platforms that start to move up the level
     for( var i = 0; i < (NUMBER_OF_PLATFORM - 1); i++ ) {
-      this.platformsCreateOne( this.rnd.integerInRange( 0, this.world.width - 50 ), this.world.height - 100 * i , 100 );
+      this.platformsCreateOne( this.rnd.integerInRange( 0, this.world.width - 50 ), this.world.height - 100 * i , 70 );
     }
   },
 
@@ -226,8 +233,8 @@ playgame.prototype = {
     // this is a helper function since writing all of this out can get verbose elsewhere
     var platform = this.platforms.getFirstDead();
     platform.reset( x, y );
-    platform.scale.x = 0.5;
-    platform.scale.y = 0.5;
+    platform.scale.x = 0.3;
+    platform.scale.y = 0.3;
     platform.body.immovable = true;
 
     if (game.rnd.between(0, 0.5)!= 0){
@@ -238,8 +245,8 @@ playgame.prototype = {
     } else {
         platform.kind = "normal";
         platform.loadTexture('pixel', 0)
-        platform.scale.x = 0.5;
-        platform.scale.y = 0.5;
+        platform.scale.x = 0.4;
+        platform.scale.y = 0.4;
     }
     return platform;
   },
@@ -272,11 +279,12 @@ playgame.prototype = {
     // hero collision setup
     // disable all collisions except for down
     this.physics.arcade.enable( this.hero );
-    this.hero.body.gravity.y = gravity;
-    this.hero.body.velocity.y = -1500;
-    this.hero.body.checkCollision.up = false;
-    this.hero.body.checkCollision.left = false;
-    this.hero.body.checkCollision.right = false;
+    var hero = this.hero.body
+    hero.gravity.y = gravity;
+    hero.velocity.y = velocityUp;
+    hero.checkCollision.up = false;
+    hero.checkCollision.left = false;
+    hero.checkCollision.right = false;
   },
 
   heroTiltMove: function(alpha,beta,gamma, velocity, self){
@@ -308,6 +316,10 @@ playgame.prototype = {
     } else {
         this.hero.loadTexture('heroUp')
     }
+
+    // this.physics.arcade.enable( this.hero );
+    // this.hero.body.velocity.y = velocityUp;
+
     //Swipe special movement
     if(canSwipe == true){
         if(Phaser.Point.distance(game.input.activePointer.positionDown,
@@ -353,12 +365,13 @@ playgame.prototype = {
 
   jetpack: function(){
     if (true){
-        this.physics.arcade.enable( this.hero );
-        this.hero.body.gravity = 0;
+        //Only activating the when the game starts, after will have not response
+        //this.hero.body is undefined after the initial start
+        velocityUp = -5000;
         var self = this
         setTimeout(function() {
-            self.hero.body.gravity = 1500;
-        }, 5000);
+            velocityUp = -1500;
+        }, 1000);
     }
   },
 

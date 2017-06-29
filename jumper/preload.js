@@ -17,6 +17,7 @@ preload.prototype = {
         game.load.image( 'heroUp', 'assets/sprites/frame_right.png' );
         game.load.image( 'heroDown', 'assets/sprites/frameFall.png' );
         game.load.spritesheet('coin', 'assets/sprites/coin_spritesheet.png', 22, 22);
+
         game.load.image( 'pixel', 'assets/sprites/ground_grass.png' );
         game.load.image( 'form2', 'assets/sprites/spring.png')
 
@@ -24,6 +25,7 @@ preload.prototype = {
         game.load.image( 'increaseHealth', 'assets/sprites/health3.png' );
         game.load.image( 'jumpHigher', 'assets/sprites/jumpHigher3.png' );
         game.load.image( 'grow', 'assets/sprites/grow4.png' );
+        game.load.image( 'coins', 'assets/sprites/coins1.png' );
 
         game.load.audio('sfxdouble', 'assets/audio/doubleJump.mp3')
         game.load.audio('sfxgameplay', 'assets/audio/gameplay1.mp3')

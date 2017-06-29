@@ -17,11 +17,25 @@ var singleDecrease = 8
 
 var deviceCheck = new MobileDetect(window.navigator.userAgent);
 
+var coinsDisplay
+
 var playgame = function(game){};
 
 playgame.prototype = {
 
   create: function() {
+<<<<<<< HEAD
+=======
+
+   coinsTitle = game.add.bitmapText(520, 20, "font", "coins", 30);
+   coinsTitle.fixedToCamera = true
+   coinsTitle.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
+
+   this.coinsDisplay = game.add.bitmapText(550, 50, "font", coins.toString(), 30);
+   this.coinsDisplay.fixedToCamera = true;
+   this.coinsDisplay.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
+
+>>>>>>> 6eb5fa41d82ae31046a0bc4e61123716f6f01560
     //Setting up health bar
     var barConfig = {
         width: 450,
@@ -41,8 +55,12 @@ playgame.prototype = {
     this.sfx = {
         coin: this.game.add.audio('sfxcoin'),
         double: this.game.add.audio('sfxdouble'),
+<<<<<<< HEAD
         gameplay: this.game.add.audio('sfxgameplay'),
         die: this.game.add.audio('sfxdie')
+=======
+
+>>>>>>> 6eb5fa41d82ae31046a0bc4e61123716f6f01560
     };
 
     // background color
@@ -99,6 +117,11 @@ playgame.prototype = {
   },
 
   update: function() {
+<<<<<<< HEAD
+=======
+    this.coinsDisplay.text = coins;
+
+>>>>>>> 6eb5fa41d82ae31046a0bc4e61123716f6f01560
     background.tilePosition.y += 0.35
     background.position.y = this.camera.y;
     this.world.bringToTop(this.myHealthBar);
@@ -186,8 +209,13 @@ playgame.prototype = {
        }
        this.sfx.coin.play();
        this.myHealthBar.setPercent(health);
+<<<<<<< HEAD
        coin.kill();
        coins += 1
+=======
+       coins += 1;
+       coin.kill()
+>>>>>>> 6eb5fa41d82ae31046a0bc4e61123716f6f01560
     },
 
 

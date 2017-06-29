@@ -1,7 +1,7 @@
 var NUMBER_OF_PLATFORM = 20
 var background
 var health = 100
-var coins= 0
+var score= 0
 var canSwipe = true
 var swipeDistance = 200
 var swipePowah = 1
@@ -10,20 +10,13 @@ var coins = 0;
 var deviceCheck = new MobileDetect(window.navigator.userAgent);
 
 var coinsDisplay
+var scoreDisplay
 
 var playgame = function(game){};
 
 playgame.prototype = {
 
   create: function() {
-
-   coinsTitle = game.add.bitmapText(520, 20, "font", "coins", 30);
-   coinsTitle.fixedToCamera = true
-   coinsTitle.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
-
-   this.coinsDisplay = game.add.bitmapText(550, 50, "font", coins.toString(), 30);
-   this.coinsDisplay.fixedToCamera = true;
-   this.coinsDisplay.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
 
     //Setting up health bar
     var barConfig = {
@@ -86,10 +79,27 @@ playgame.prototype = {
             heroTiltMove(event.alpha, event.beta, event.gamma, velocity, self);
         }, true);
     }
+
+    scoreTitle = game.add.bitmapText(485, 20 , "font", "score", 24);
+    scoreTitle.fixedToCamera = true
+    scoreTitle.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
+
+    this.scoreDisplay = game.add.bitmapText(490, 45 , "font", score.toString(), 24);
+    this.scoreDisplay.fixedToCamera = true
+    this.scoreDisplay.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
+
+    coinsTitle = game.add.bitmapText(570, 20, "font", "coins", 24);
+    coinsTitle.fixedToCamera = true
+    coinsTitle.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
+
+    this.coinsDisplay = game.add.bitmapText(600, 45, "font", coins.toString(), 24);
+    this.coinsDisplay.fixedToCamera = true;
+    this.coinsDisplay.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
   },
 
   update: function() {
     this.coinsDisplay.text = coins;
+    this.scoreDisplay.text = score;
 
     background.tilePosition.y += 0.35
     background.position.y = this.camera.y;

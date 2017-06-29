@@ -30,10 +30,10 @@ gameoverscreen.prototype = {
 
 	    //Display for coins
 		var coinsTitle = game.add.bitmapText(420, 20 , "font", "coins", 60);
-		var coinsDisplay = game.add.bitmapText(480, 70 , "font", coins.toString(), 60);
+		this.coinsDisplay = game.add.bitmapText(480, 70 , "font", coins.toString(), 60);
 
 		coinsTitle.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
-		coinsDisplay.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
+		this.coinsDisplay.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
 
 		var playButton = game.add.button(game.width / 2, 880, "replay", this.startGame);
 		playButton.anchor.set(0.5);
@@ -76,31 +76,35 @@ gameoverscreen.prototype = {
 		});
 	},
 
+	update: function() {
+		this.coinsDisplay.text = coins;
+	},
+
 	updateHealth: function(){
-		if (coins > countHealth) {
-				countHealth = Math.round(countHealth * 1.1);
+		if (coins >= countHealth) {
 				textHealth.setText(countHealth)
 				this.fx.play();
-				coins - countHealth;
+				coins = coins - countHealth;
+				countHealth = Math.round(countHealth * 1.1);
 			}
 
 	},
 
 	updateJumpHigher: function(){
-		if (coins > countHealth) {
-			countJumpHigher = Math.round(countJumpHigher * 1.1);
+		if (coins >= countJumpHigher) {
 			textJumpHigher.setText(countJumpHigher)
 			this.fx.play();
-			coins-countJumpHigher;
+			coins = coins - countJumpHigher;
+			countJumpHigher = Math.round(countJumpHigher * 1.1);
 		}
 	},
 
 	updateGrow: function(){
-		if (coins > countGrow) {
-			countGrow = Math.round(countGrow * 1.1);
+		if (coins >= countGrow) {
 			textGrow.setText(countGrow)
 			this.fx.play();
-			coins-countGrow;
+			coins = coins - countGrow;
+			countGrow = Math.round(countGrow * 1.1);
 		}
 	},
 

@@ -23,7 +23,7 @@ preload.prototype = {
 
         //Gameover Screen
         game.load.image( 'increaseHealth', 'assets/sprites/health3.png' );
-        game.load.image( 'jumpHigher', 'assets/sprites/jumpHigher3.png' );
+        game.load.image( 'jumpHigher', 'assets/sprites/jetpack.png' );
         game.load.image( 'grow', 'assets/sprites/grow4.png' );
         game.load.image( 'coins', 'assets/sprites/coins1.png' );
 

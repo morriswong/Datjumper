@@ -46,7 +46,7 @@ gameoverscreen.prototype = {
 
 		var jumpHigher = game.add.button(100, 500, "jumpHigher", this.updateJumpHigher, this);
 		jumpHigher.anchor.set(0.5)
-		var jumpHigherTxt = game.add.bitmapText(220, 500 , "font", "Springs", 40);
+		var jumpHigherTxt = game.add.bitmapText(220, 500 , "font", "Jetpack", 40);
 		jumpHigherTxt.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
 		game.add.tileSprite(400, 480, 80, 80, "coins");
 
@@ -58,19 +58,19 @@ gameoverscreen.prototype = {
 
 		textHealth = game.add.text(500,260, countHealth, {
 			font: "65px Arial",
-			fill: "#ff0044",
+			fill: "#fff",
 			align: "center"
 		});
 
 		textJumpHigher = game.add.text(500,480, countJumpHigher, {
 			font: "65px Arial",
-			fill: "#ff0044",
+			fill: "#fff",
 			align: "center"
 		});
 
 		textGrow = game.add.text(500,690, countGrow, {
 			font: "65px Arial",
-			fill: "#ff0044",
+			fill: "#fff",
 			align: "center"
 		});
 	},

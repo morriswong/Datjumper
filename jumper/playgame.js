@@ -1,38 +1,9 @@
-var NUMBER_OF_PLATFORM = 20
-var background
-
-var health = 100
-var maxHealth = 200
-
-var coins= 0
-
-var canSwipe = true
-var swipeDistance = 200
-var swipePowah = 1
-
-var heroSize = 0.2
-
-var doubleDecrease = 15
-var singleDecrease = 8
-
-var deviceCheck = new MobileDetect(window.navigator.userAgent);
-
-var coinsDisplay
-
 var playgame = function(game){};
 
 playgame.prototype = {
 
+
   create: function() {
-
-   coinsTitle = game.add.bitmapText(520, 20, "font", "coins", 30);
-   coinsTitle.fixedToCamera = true
-   coinsTitle.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
-
-   this.coinsDisplay = game.add.bitmapText(550, 50, "font", coins.toString(), 30);
-   this.coinsDisplay.fixedToCamera = true;
-   this.coinsDisplay.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
-
     //Setting up health bar
     var barConfig = {
         width: 450,
@@ -87,15 +58,48 @@ playgame.prototype = {
     // cursor controls
     this.cursor = this.input.keyboard.createCursorKeys();
 
-    var increaseHealth = game.add.button(105, 850, "increaseHealth", this.startGame);
+    //power ups
+    var increaseHealth = game.add.button(35, 850, "increaseHealth", this.healthUp, this);
     increaseHealth.fixedToCamera = true
     increaseHealth.scale.setTo(0.5, 0.5)
-    var jumpHigher = game.add.button(290, 865, "jumpHigher", this.startGame);
+    // increaseHealth.anchor.set( 1 );
+    var times = game.add.bitmapText(120, 870, "font", "x", 40);
+    times.fixedToCamera = true
+    times.tint = 0xFFFFFF;
+    this.healthUpCount = game.add.bitmapText(150, 860, "font", healthUpCount.toString(), 60);
+    this.healthUpCount.fixedToCamera = true;
+    this.healthUpCount.tint = 0xFFFFFF;;
+
+    var jumpHigher = game.add.button(230, 850, "jumpHigher", this.jetpack(), this);
     jumpHigher.fixedToCamera = true
     jumpHigher.scale.setTo(0.5, 0.5)
-    var grow = game.add.button(475, 855, "grow", this.startGame);
+    // jumpHigher.anchor.set( 1 );
+    var times = game.add.bitmapText(325, 870, "font", "x", 40);
+    times.fixedToCamera = true
+    times.tint = 0xFFFFFF;
+    this.jetpackCount = game.add.bitmapText(365, 860, "font", jetpackCount.toString(), 60);
+    this.jetpackCount.fixedToCamera = true;
+    this.jetpackCount.tint = 0xFFFFFF;;
+
+    var grow = game.add.button(445, 855, "grow", this.mushroom, this);
     grow.fixedToCamera = true
     grow.scale.setTo(0.5, 0.5)
+    // grow.anchor.set( 1 );
+    var times = game.add.bitmapText(520, 870, "font", "x", 40);
+    times.fixedToCamera = true
+    times.tint = 0xFFFFFF;
+    this.mushroomCount = game.add.bitmapText(560, 860, "font", mushroomCount.toString(), 60);
+    this.mushroomCount.fixedToCamera = true;
+    this.mushroomCount.tint = 0xFFFFFF;;
+
+    //Coins count
+    coinsTitle = game.add.bitmapText(520, 20, "font", "coins", 30);
+    coinsTitle.fixedToCamera = true
+    coinsTitle.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
+
+    this.coinsDisplay = game.add.bitmapText(550, 50, "font", coins.toString(), 30);
+    this.coinsDisplay.fixedToCamera = true;
+    this.coinsDisplay.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
 
     if (window.DeviceOrientationEvent) {
         var velocity = this.hero.body.velocity;
@@ -240,7 +244,6 @@ playgame.prototype = {
     return platform;
   },
 
-  //Not working while heroMove exist
   findPlatformType: function(hero, platform){
       if (platform.kind == "double" && this.hero.body.touching.down){
           this.hero.body.velocity.y = -2000;
@@ -269,15 +272,11 @@ playgame.prototype = {
     // hero collision setup
     // disable all collisions except for down
     this.physics.arcade.enable( this.hero );
-    this.hero.body.gravity.y = 1500;
+    this.hero.body.gravity.y = gravity;
     this.hero.body.velocity.y = -1500;
     this.hero.body.checkCollision.up = false;
     this.hero.body.checkCollision.left = false;
     this.hero.body.checkCollision.right = false;
-  },
-
-  buttonPressed: function(){
-      console.log("button pressed");
   },
 
   heroTiltMove: function(alpha,beta,gamma, velocity, self){
@@ -343,6 +342,32 @@ playgame.prototype = {
       health = 100
       this.sfx.die.play();
       this.state.start( 'GameOverScreen' );
+    }
+},
+
+  healthUp: function(){
+    if (true){
+        health += (80 - health)
+    }
+  },
+
+  jetpack: function(){
+    if (true){
+        this.physics.arcade.enable( this.hero );
+        this.hero.body.gravity = 0;
+        var self = this
+        setTimeout(function() {
+            self.hero.body.gravity = 1500;
+        }, 5000);
+    }
+  },
+
+  mushroom: function(){
+    if (true){
+        heroSize = 1;
+        setTimeout(function() {
+            heroSize = 0.2
+        }, 5000);
     }
   }
 }

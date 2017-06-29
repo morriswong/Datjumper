@@ -20,7 +20,6 @@ gameoverscreen.prototype = {
 
 		var titleBG = game.add.tileSprite(0, 0, game.width, game.height, "backgrounds2");
 
-
 	    //Display for scores
 		var scoreTitle = game.add.bitmapText(game.width/8, 20 , "font", "score", 60);
 		var scoreDisplay = game.add.bitmapText(game.width/7+15, 70 , "font", score.toString(), 60);
@@ -35,16 +34,9 @@ gameoverscreen.prototype = {
 		coinsTitle.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
 		coinsDisplay.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
 
-<<<<<<< HEAD
-	var playButton = game.add.button(game.width / 2, 860, "replay", this.startGame);
-	playButton.anchor.set(0.5);
-	playButton.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
-    playButton.scale.setTo(0.9, 1);
-=======
 		var playButton = game.add.button(game.width / 2, 880, "replay", this.startGame);
 		playButton.anchor.set(0.5);
 		playButton.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
->>>>>>> 6eb5fa41d82ae31046a0bc4e61123716f6f01560
 
 		var increaseHealth = game.add.button(100, 300, "increaseHealth", this.updateHealth, this);
 		increaseHealth.anchor.set(0.5)

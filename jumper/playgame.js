@@ -29,7 +29,7 @@ playgame.prototype = {
     var barConfig = {
         width: 450,
         height: 40,
-        x: 250,
+        x: 235,
         y: 40,
         bg: {
             color: '#651828'
@@ -124,26 +124,32 @@ playgame.prototype = {
 
     scoreTitle = game.add.bitmapText(485, 20 , "font", "score", 24);
     scoreTitle.fixedToCamera = true
-    scoreTitle.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
+    scoreTitle.tint = 0xffa100;
 
     this.scoreDisplay = game.add.bitmapText(490, 45 , "font", score.toString(), 24);
     this.scoreDisplay.fixedToCamera = true
-    this.scoreDisplay.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
+    this.scoreDisplay.tint = 0xFFFFFF;
 
     coinsTitle = game.add.bitmapText(570, 20, "font", "coins", 24);
     coinsTitle.fixedToCamera = true
-    coinsTitle.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
+    coinsTitle.tint = 0xF9DC00
 
     this.coinsDisplay = game.add.bitmapText(600, 45, "font", coins.toString(), 24);
     this.coinsDisplay.fixedToCamera = true;
-    this.coinsDisplay.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
+    this.coinsDisplay.tint = 0xFFFFFF;
+
+    this.introText();
   },
 
   update: function() {
     this.coinsDisplay.text = coins;
     this.scoreDisplay.text = score;
 
-    background.tilePosition.y += 0.35
+    this.healthUpCount.text = healthUpCount;
+    this.jetpackCount.text = jetpackCount;
+    this.mushroomCount.text = mushroomCount;
+
+    // background.tilePosition.y += 0.35
     background.position.y = this.camera.y;
     this.world.bringToTop(this.myHealthBar);
     // this is where the main magic happens
@@ -193,6 +199,18 @@ playgame.prototype = {
     this.hero = null;
     this.platforms.destroy();
     this.platforms = null;
+  },
+
+  introText: function(){
+      var instructions = game.add.bitmapText(45, 300, "font", "Collect coins to stay alive!", 40);
+      var msg = game.add.bitmapText(180, 360, "font", "Happy jumping!", 40);
+      instructions.fixedToCamera = true
+      msg.fixedToCamera = true
+      setTimeout(function() {
+          instructions.fixedToCamera = false
+          msg.fixedToCamera = false
+      }, 3000);
+
   },
 
 // COINS
@@ -380,29 +398,30 @@ playgame.prototype = {
 },
 
   healthUp: function(){
-    if (true){
+    if (healthUpCount > 0){
         health += (80 - health)
+        healthUpCount -= 1
     }
   },
 
   jetpack: function(){
-    if (true){
-        //Only activating the when the game starts, after will have not response
-        //this.hero.body is undefined after the initial start
+    if (jetpackCount > 0){
         this.hero.body.velocity.y = -5000;
         var self = this
         setTimeout(function() {
             self.hero.body.velocity.y = -1500;
         }, 5000);
+        jetpackCount -= 1
     }
   },
 
   mushroom: function(){
-    if (true){
+    if (mushroomCount > 0){
         heroSize = 1;
         setTimeout(function() {
             heroSize = 0.2
         }, 5000);
+        mushroomCount -= 1
     }
   }
 }

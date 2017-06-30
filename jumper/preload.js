@@ -9,8 +9,6 @@ preload.prototype = {
         game.load.image("background", "assets/sprites/backgrounds1.png");  //preload background iamge for titlescreen
         game.load.image("title", "assets/sprites/jump2.png");  //preload image for titlescreen
         game.load.image("playbutton", "assets/sprites/playbutton2.png"); //preload image for titlescreen
-        game.load.image("backgrounds2", "assets/sprites/backgrounds2.png"); //preload background for game over
-        game.load.image("replay", "assets/sprites/replay5.png"); //preload replay button
         game.load.image("separator", "assets/sprites/separator.png");
         game.load.bitmapFont("font", "assets/fonts/font.png", "assets/fonts/font.fnt");
 
@@ -22,6 +20,9 @@ preload.prototype = {
         game.load.image( 'form2', 'assets/sprites/spring.png')
 
         //Gameover Screen
+        game.load.image("backgrounds3", "assets/sprites/backgrounds4.png"); //preload background for game over
+        game.load.image("replay", "assets/sprites/replay6.png"); //preload replay button
+
         game.load.image( 'increaseHealth', 'assets/sprites/health3.png' );
         game.load.image( 'jumpHigher', 'assets/sprites/jetpack.png' );
         game.load.image( 'grow', 'assets/sprites/grow4.png' );

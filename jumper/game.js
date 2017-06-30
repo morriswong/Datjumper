@@ -35,11 +35,11 @@ var countHealth = 10;
 
 var jumpHigher
 var textJumpHigher
-var countJumpHigher = 20;
+var countJumpHigher = 15;
 
 var grow
 var textGrow
-var countGrow = 30;
+var countGrow = 20;
 
 window.onload = function() {
     game = new Phaser.Game( 640,960, Phaser.CANVAS, '' );

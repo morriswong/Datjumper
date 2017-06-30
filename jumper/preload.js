@@ -13,7 +13,9 @@ preload.prototype = {
 		loadingBar.anchor.setTo(0.5,0.5);
 		game.load.setPreloadSprite(loadingBar);
 
-        loadingText = game.add.text(120, game.height / 2-190, '0%', {font: 'bold 45px Comic Sans MS', fill: '#fff', boundsAlignH: "center", boundsAlignV: "middle"});
+        // game.load.bitmapFont("font", "assets/fonts/font.png", "assets/fonts/font.fnt");
+        // loadingText = game.add.text(95, game.height / 2-190, '0%', {font: 'bold 45px Comic Sans MS', fill: '#fff', boundsAlignH: "center", boundsAlignV: "middle"});
+        loadingText = game.add.bitmapText(100, game.height / 2-190, "font", "0%", 40);
 
         game.load.onFileComplete.add(this.fileComplete, this)
 
@@ -21,7 +23,7 @@ preload.prototype = {
         game.load.image("title", "assets/sprites/jump2.png");  //preload image for titlescreen
         game.load.image("playbutton", "assets/sprites/playbutton2.png"); //preload image for titlescreen
         game.load.image("separator", "assets/sprites/separator.png");
-        game.load.bitmapFont("font", "assets/fonts/font.png", "assets/fonts/font.fnt");
+        // game.load.bitmapFont("font", "assets/fonts/font.png", "assets/fonts/font.fnt");
 
         game.load.image('heroUp', 'assets/sprites/frame_right.png');
         game.load.image('heroDown', 'assets/sprites/frameFall.png');
@@ -46,7 +48,7 @@ preload.prototype = {
     },
 
     fileComplete: function(progress){
-        loadingText.text = 'Almost There... '+progress + '%';
+        loadingText.text = 'Almost There... '+ progress + '%';
     },
 
 	create: function(){

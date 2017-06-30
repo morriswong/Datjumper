@@ -57,6 +57,7 @@ boot.prototype = {
     preload: function(){
 		game.load.image("loading","assets/sprites/loadingbar2.png");   //loading bar e.g. http://github.hubspot.com/pace/docs/welcome/
         game.load.image("loadingBG", "assets/sprites/backgrounds1.png")
+        game.load.bitmapFont("font", "assets/fonts/font.png", "assets/fonts/font.fnt");
 	},
 
 	create: function(){

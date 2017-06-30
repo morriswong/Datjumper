@@ -209,7 +209,7 @@ playgame.prototype = {
       setTimeout(function() {
           instructions.fixedToCamera = false
           msg.fixedToCamera = false
-      }, 3000);
+      }, 8000);
 
   },
 

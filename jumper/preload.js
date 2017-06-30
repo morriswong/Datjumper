@@ -1,11 +1,25 @@
-var preload = function(game){};
+ var preload = function(game){};
+
+var loadingBar
+var loadingText
 
 preload.prototype = {
     preload: function(){
-        // game.load.image("loading","assets/sprites/loading.png");
+
+        var loadingBG= this.add.sprite(320, 480, "loadingBG");
+        loadingBG.anchor.setTo(0.5,0.5);
+        // game.load.setPreloadSprite(loadingBG);
+
 		var loadingBar = this.add.sprite(game.width / 2, game.height / 2, "loading");
 		loadingBar.anchor.setTo(0.5,0.5);
 		game.load.setPreloadSprite(loadingBar);
+
+        loadingText = game.add.text(game.width / 2-230, game.height / 2-100, '0%', {font: 'bold 45px Comic Sans MS', fill: '#e56230', boundsAlignH: "center", boundsAlignV: "middle"});
+
+        game.load.onFileComplete.add(this.fileComplete, this)
+        //console.log(this.load.progress)
+
+
         game.load.image("background", "assets/sprites/backgrounds1.png");  //preload background iamge for titlescreen
         game.load.image("title", "assets/sprites/jump2.png");  //preload image for titlescreen
         game.load.image("playbutton", "assets/sprites/playbutton2.png"); //preload image for titlescreen
@@ -31,6 +45,10 @@ preload.prototype = {
         game.load.audio('sfxgameplay', 'assets/audio/gameplay1.mp3')
         game.load.audio('sfxcoin', 'assets/audio/coin.mp3');
         game.load.audio('sfxdie', 'assets/audio/die.mp3');
+    },
+
+    fileComplete: function(progress){
+        loadingText.text = 'Almost There: '+progress + '%';
     },
 
 	create: function(){

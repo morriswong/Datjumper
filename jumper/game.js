@@ -14,30 +14,24 @@ var boot = function(game){};
 boot.prototype = {
 
     preload: function(){
-		game.load.image("loading","assets/sprites/loading.png");   //loading bar e.g. http://github.hubspot.com/pace/docs/welcome/
+		game.load.image("loading","assets/sprites/loadingbar2.png");   //loading bar e.g. http://github.hubspot.com/pace/docs/welcome/
+        game.load.image("loadingBG", "assets/sprites/backgrounds1.png")
 	},
 
 	create: function(){
+        // game.load.onLoadStart.add(this.loadStart, this);
+        // game.load.onLoadComplete.add(this.loadComplete, this);
+        // this.start();
+
         console.log("loaded image");
 		game.scale.pageAlignHorizontally = true;
 		game.scale.pageAlignVertically = true;
 		game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         game.scale.setScreenSize( true );
-        var myContext = window.addEventListener('touchstart', function() {
-
-            // create new buffer source for playback with an already
-            // loaded and decoded empty sound file
-            var source = myContext.createBufferSource();
-            source.buffer = myDecodedBuffer;
-
-            // connect to output (your speakers)
-            source.connect(myContext.destination);
-
-            // play the file
-            source.noteOn(0);
-
-        }, false);
 		game.state.start("Preload");
 
 	}
+
+
+
 }

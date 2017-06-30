@@ -91,7 +91,7 @@ playgame.prototype = {
     this.healthUpCount.fixedToCamera = true;
     this.healthUpCount.tint = 0xFFFFFF;;
 
-    var jumpHigher = game.add.button(230, 850, "jumpHigher", this.jetpack(), this);
+    var jumpHigher = game.add.button(230, 850, "jumpHigher", this.jetpack, this);
     jumpHigher.fixedToCamera = true
     jumpHigher.scale.setTo(0.5, 0.5)
     // jumpHigher.anchor.set( 1 );
@@ -389,11 +389,11 @@ playgame.prototype = {
     if (true){
         //Only activating the when the game starts, after will have not response
         //this.hero.body is undefined after the initial start
-        velocityUp = -5000;
+        this.hero.body.velocity.y = -5000;
         var self = this
         setTimeout(function() {
-            velocityUp = -1500;
-        }, 1000);
+            self.hero.body.velocity.y = -1500;
+        }, 5000);
     }
   },
 

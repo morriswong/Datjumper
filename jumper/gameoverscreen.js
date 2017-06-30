@@ -37,6 +37,7 @@ gameoverscreen.prototype = {
 		var playButton = game.add.button(game.width / 2, 880, "replay", this.startGame);
 		playButton.anchor.set(0.5);
 		playButton.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
+        playButton.scale.setTo(0.9, 1)
 
 		var increaseHealth = game.add.button(100, 300, "increaseHealth", this.updateHealth, this);
 		increaseHealth.anchor.set(0.5)

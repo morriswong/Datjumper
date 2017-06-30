@@ -68,7 +68,7 @@ boot.prototype = {
 		game.scale.pageAlignHorizontally = true;
 		game.scale.pageAlignVertically = true;
 		game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-        game.scale.setScreenSize( true );
+        // game.scale.setScreenSize( true )
 		game.state.start("Preload");
 
 	}

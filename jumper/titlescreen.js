@@ -13,7 +13,7 @@ titlescreen.prototype = {
         this.scale.pageAlignHorizontally = true;
 		this.scale.pageAlignVertically = true;
 		this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-        this.scale.setScreenSize( true );
+        // this.scale.setScreenSize( true );
 
         var titleBG = game.add.tileSprite(0, 0, game.width, game.height, "background");
 		var title = game.add.image(game.width / 2, 275, "title");

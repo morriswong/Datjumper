@@ -25,12 +25,11 @@ var playgame = function(game){};
 playgame.prototype = {
 
   create: function() {
-
     //Setting up health bar
     var barConfig = {
         width: 450,
         height: 40,
-        x: 250,
+        x: 235,
         y: 40,
         bg: {
             color: '#651828'
@@ -80,15 +79,39 @@ playgame.prototype = {
     // cursor controls
     this.cursor = this.input.keyboard.createCursorKeys();
 
-    var increaseHealth = game.add.button(105, 850, "increaseHealth", this.startGame);
+    //power ups
+    var increaseHealth = game.add.button(35, 850, "increaseHealth", this.healthUp, this);
     increaseHealth.fixedToCamera = true
     increaseHealth.scale.setTo(0.5, 0.5)
-    var jumpHigher = game.add.button(290, 865, "jumpHigher", this.startGame);
+    // increaseHealth.anchor.set( 1 );
+    var times = game.add.bitmapText(120, 870, "font", "x", 40);
+    times.fixedToCamera = true
+    times.tint = 0xFFFFFF;
+    this.healthUpCount = game.add.bitmapText(150, 860, "font", healthUpCount.toString(), 60);
+    this.healthUpCount.fixedToCamera = true;
+    this.healthUpCount.tint = 0xFFFFFF;;
+
+    var jumpHigher = game.add.button(230, 850, "jumpHigher", this.jetpack, this);
     jumpHigher.fixedToCamera = true
     jumpHigher.scale.setTo(0.5, 0.5)
-    var grow = game.add.button(475, 855, "grow", this.startGame);
+    // jumpHigher.anchor.set( 1 );
+    var times = game.add.bitmapText(325, 870, "font", "x", 40);
+    times.fixedToCamera = true
+    times.tint = 0xFFFFFF;
+    this.jetpackCount = game.add.bitmapText(365, 860, "font", jetpackCount.toString(), 60);
+    this.jetpackCount.fixedToCamera = true;
+    this.jetpackCount.tint = 0xFFFFFF;;
+
+    var grow = game.add.button(445, 855, "grow", this.mushroom, this);
     grow.fixedToCamera = true
     grow.scale.setTo(0.5, 0.5)
+    // grow.anchor.set( 1 );
+    var times = game.add.bitmapText(520, 870, "font", "x", 40);
+    times.fixedToCamera = true
+    times.tint = 0xFFFFFF;
+    this.mushroomCount = game.add.bitmapText(560, 860, "font", mushroomCount.toString(), 60);
+    this.mushroomCount.fixedToCamera = true;
+    this.mushroomCount.tint = 0xFFFFFF;;
 
     if (window.DeviceOrientationEvent) {
         var velocity = this.hero.body.velocity;
@@ -101,26 +124,32 @@ playgame.prototype = {
 
     scoreTitle = game.add.bitmapText(485, 20 , "font", "score", 24);
     scoreTitle.fixedToCamera = true
-    scoreTitle.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
+    scoreTitle.tint = 0xffa100;
 
     this.scoreDisplay = game.add.bitmapText(490, 45 , "font", score.toString(), 24);
     this.scoreDisplay.fixedToCamera = true
-    this.scoreDisplay.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
+    this.scoreDisplay.tint = 0xFFFFFF;
 
     coinsTitle = game.add.bitmapText(570, 20, "font", "coins", 24);
     coinsTitle.fixedToCamera = true
-    coinsTitle.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
+    coinsTitle.tint = 0xF9DC00
 
     this.coinsDisplay = game.add.bitmapText(600, 45, "font", coins.toString(), 24);
     this.coinsDisplay.fixedToCamera = true;
-    this.coinsDisplay.tint = bgColors[game.rnd.between(0, bgColors.length - 1)];
+    this.coinsDisplay.tint = 0xFFFFFF;
+
+    this.introText();
   },
 
   update: function() {
     this.coinsDisplay.text = coins;
     this.scoreDisplay.text = score;
 
-    background.tilePosition.y += 0.35
+    this.healthUpCount.text = healthUpCount;
+    this.jetpackCount.text = jetpackCount;
+    this.mushroomCount.text = mushroomCount;
+
+    // background.tilePosition.y += 0.35
     background.position.y = this.camera.y;
     this.world.bringToTop(this.myHealthBar);
     // this is where the main magic happens
@@ -170,6 +199,18 @@ playgame.prototype = {
     this.hero = null;
     this.platforms.destroy();
     this.platforms = null;
+  },
+
+  introText: function(){
+      var instructions = game.add.bitmapText(45, 300, "font", "Collect coins to stay alive!", 40);
+      var msg = game.add.bitmapText(180, 360, "font", "Happy jumping!", 40);
+      instructions.fixedToCamera = true
+      msg.fixedToCamera = true
+      setTimeout(function() {
+          instructions.fixedToCamera = false
+          msg.fixedToCamera = false
+      }, 3000);
+
   },
 
 // COINS
@@ -224,7 +265,7 @@ playgame.prototype = {
     this.platformsCreateOne( -16, this.world.height - 16, this.world.width + 16 );
     // create a batch of platforms that start to move up the level
     for( var i = 0; i < (NUMBER_OF_PLATFORM - 1); i++ ) {
-      this.platformsCreateOne( this.rnd.integerInRange( 0, this.world.width - 50 ), this.world.height - 100 * i , 100 );
+      this.platformsCreateOne( this.rnd.integerInRange( 0, this.world.width - 50 ), this.world.height - 100 * i , 70 );
     }
   },
 
@@ -232,8 +273,8 @@ playgame.prototype = {
     // this is a helper function since writing all of this out can get verbose elsewhere
     var platform = this.platforms.getFirstDead();
     platform.reset( x, y );
-    platform.scale.x = 0.5;
-    platform.scale.y = 0.5;
+    platform.scale.x = 0.3;
+    platform.scale.y = 0.3;
     platform.body.immovable = true;
 
     if (game.rnd.between(0, 0.5)!= 0){
@@ -244,13 +285,12 @@ playgame.prototype = {
     } else {
         platform.kind = "normal";
         platform.loadTexture('pixel', 0)
-        platform.scale.x = 0.5;
-        platform.scale.y = 0.5;
+        platform.scale.x = 0.4;
+        platform.scale.y = 0.4;
     }
     return platform;
   },
 
-  //Not working while heroMove exist
   findPlatformType: function(hero, platform){
       if (platform.kind == "double" && this.hero.body.touching.down){
           this.hero.body.velocity.y = -2000;
@@ -279,15 +319,12 @@ playgame.prototype = {
     // hero collision setup
     // disable all collisions except for down
     this.physics.arcade.enable( this.hero );
-    this.hero.body.gravity.y = 1500;
-    this.hero.body.velocity.y = -1500;
-    this.hero.body.checkCollision.up = false;
-    this.hero.body.checkCollision.left = false;
-    this.hero.body.checkCollision.right = false;
-  },
-
-  buttonPressed: function(){
-      console.log("button pressed");
+    var hero = this.hero.body
+    hero.gravity.y = gravity;
+    hero.velocity.y = velocityUp;
+    hero.checkCollision.up = false;
+    hero.checkCollision.left = false;
+    hero.checkCollision.right = false;
   },
 
   heroTiltMove: function(alpha,beta,gamma, velocity, self){
@@ -319,6 +356,10 @@ playgame.prototype = {
     } else {
         this.hero.loadTexture('heroUp')
     }
+
+    // this.physics.arcade.enable( this.hero );
+    // this.hero.body.velocity.y = velocityUp;
+
     //Swipe special movement
     if(canSwipe == true){
         if(Phaser.Point.distance(game.input.activePointer.positionDown,
@@ -353,6 +394,34 @@ playgame.prototype = {
       health = 100
       this.sfx.die.play();
       this.state.start( 'GameOverScreen' );
+    }
+},
+
+  healthUp: function(){
+    if (healthUpCount > 0){
+        health += (80 - health)
+        healthUpCount -= 1
+    }
+  },
+
+  jetpack: function(){
+    if (jetpackCount > 0){
+        this.hero.body.velocity.y = -5000;
+        var self = this
+        setTimeout(function() {
+            self.hero.body.velocity.y = -1500;
+        }, 5000);
+        jetpackCount -= 1
+    }
+  },
+
+  mushroom: function(){
+    if (mushroomCount > 0){
+        heroSize = 1;
+        setTimeout(function() {
+            heroSize = 0.2
+        }, 5000);
+        mushroomCount -= 1
     }
   }
 }
